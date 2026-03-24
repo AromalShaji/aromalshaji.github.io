@@ -1,498 +1,1187 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aromal P Shaji — Portfolio</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
 
-  <meta name="description" content="I'm Aromal P Shaji Junior Research Fellow | Software Developer | RUSA Project at Mahatma Gandhi University">
-  <meta name="keywords" content="Aromal Shaji, Junior Research Fellow, Software Developer, Project Assistant, GitHub portfolio, software development, data science projects, Mahatma Gandhi University, RUSA project, web development, Python, Django, Flask, PHP, Laravel, CodeIgniter, Java, JSP, Servlets">
-  <meta name="author" content="Aromal Shaji">
-  <meta property="og:title" content="Junior Research Fellow | Software Developer | Project Assistant">
-  <meta property="og:description" content="Explore my portfolio and services in software development and app design.">
-  <meta property="og:image" content="https://github.com/AromalShaji/portfolio/blob/main/assets/img/me1.jpeg">
-  <meta property="og:url" content="https://aromalshaji.github.io">
-  <meta property="og:type" content="website">
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Junior Research Fellow, Software Developer, Project Assistant">
-  <meta name="twitter:description" content="Explore my portfolio and services in software development and app design.">
-  <meta name="twitter:image" content="https://github.com/AromalShaji/portfolio/blob/main/assets/img/me1.jpeg">
-
-  
-  <link rel="canonical" href="https://aromalshaji.github.io">
-  <meta name="robots" content="index, follow">
-
-  <title>AROMAL SHAJI</title>
-
-  <script type="application/ld+json">
-  {
-      "@context": "http://schema.org",
-      "@type": "Person",
-      "name": "Aromal Shaji",
-      "jobTitle": "Junior Research Fellow, Software Developer, Project Assistant",
-      "url": "https://aromalshaji.github.io",
-      "sameAs": [
-          "https://www.linkedin.com/in/aromal-shaji-887123226/",
-          "https://www.instagram.com/aromallps"
-      ]
+<style>
+  :root {
+    --neon-green: #39ff14;
+    --neon-cyan: #00ffff;
+    --neon-pink: #ff00ff;
+    --neon-yellow: #ffff00;
+    --neon-orange: #ff6600;
+    --neon-blue: #0066ff;
+    --bg-dark: #050510;
+    --bg-card: #0a0a1a;
+    --bg-card2: #080820;
+    --pixel-border: 3px solid var(--neon-cyan);
+    --scanline: rgba(0,255,255,0.03);
   }
-  </script>
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Satisfy" rel="stylesheet">
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  html { scroll-behavior: smooth; }
 
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  body {
+    background: var(--bg-dark);
+    color: #e0e0ff;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    width: 16px; height: 16px;
+    background: var(--neon-cyan);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 99999;
+    image-rendering: pixelated;
+    clip-path: polygon(0 0,100% 0,100% 50%,50% 50%,50% 100%,0 100%);
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  #cursor-trail {
+    width: 8px; height: 8px;
+    background: var(--neon-pink);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 99998;
+    clip-path: polygon(0 0,100% 0,100% 100%,0 100%);
+    transition: all 0.25s ease;
+  }
+
+  /* SCANLINES OVERLAY */
+  body::before {
+    content:'';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      var(--scanline) 2px,
+      var(--scanline) 4px
+    );
+    pointer-events: none; z-index: 9999;
+    animation: flicker 8s infinite;
+  }
+
+  @keyframes flicker {
+    0%,95%,100%{opacity:1}
+    96%{opacity:0.97}
+    97%{opacity:1}
+    98%{opacity:0.95}
+    99%{opacity:1}
+  }
+
+  /* STARFIELD CANVAS */
+  #stars-canvas {
+    position: fixed; inset: 0;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* NAVBAR */
+  .pixel-nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(5,5,16,0.92);
+    border-bottom: 2px solid var(--neon-cyan);
+    padding: 10px 0;
+    backdrop-filter: blur(4px);
+  }
+  .pixel-nav .brand {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    animation: blink-text 2s infinite;
+  }
+  @keyframes blink-text {
+    0%,100%{opacity:1} 50%{opacity:0.7}
+  }
+  .nav-link-pixel {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--neon-cyan) !important;
+    text-shadow: 0 0 8px var(--neon-cyan);
+    padding: 6px 10px !important;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .nav-link-pixel:hover {
+    color: var(--neon-pink) !important;
+    text-shadow: 0 0 15px var(--neon-pink);
+    border: 1px solid var(--neon-pink);
+    background: rgba(255,0,255,0.1);
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 80px 20px 40px;
+    background: radial-gradient(ellipse at center, #0d0d2b 0%, #050510 70%);
+  }
+
+  .hero-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.2rem, 4vw, 2.5rem);
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green), 0 0 80px rgba(57,255,20,0.3);
+    animation: glitch 4s infinite, hero-glow 3s ease-in-out infinite alternate;
+    letter-spacing: 2px;
+    line-height: 1.6;
+  }
+  .hero-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+    margin-top: 12px;
+    animation: typewriter 3s steps(30) 0.5s both;
+    white-space: nowrap; overflow: hidden;
+    border-right: 3px solid var(--neon-cyan);
+  }
+
+  @keyframes hero-glow {
+    from { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); }
+    to { text-shadow: 0 0 30px var(--neon-green), 0 0 60px var(--neon-green), 0 0 100px var(--neon-green); }
+  }
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes cursor-blink {
+    0%,100%{border-color:var(--neon-cyan)} 50%{border-color:transparent}
+  }
+
+  @keyframes glitch {
+    0%,90%,100%{transform:none; text-shadow:0 0 20px var(--neon-green),0 0 40px var(--neon-green);}
+    91%{transform:translate(-2px,1px) skewX(1deg); text-shadow:-2px 0 var(--neon-pink),2px 0 var(--neon-cyan);}
+    92%{transform:translate(2px,-1px) skewX(-1deg); text-shadow:2px 0 var(--neon-pink),-2px 0 var(--neon-cyan);}
+    93%{transform:none; text-shadow:0 0 20px var(--neon-green);}
+    94%{transform:translate(3px,0); text-shadow:-3px 0 var(--neon-pink);}
+    95%{transform:none;}
+  }
+
+  .hero-contact-strip {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .contact-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    padding: 12px 18px;
+    border: 2px solid var(--neon-cyan);
+    background: transparent;
+    color: var(--neon-cyan);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+    text-shadow: 0 0 8px var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0,255,255,0.2), inset 0 0 10px rgba(0,255,255,0.05);
+    cursor: none;
+    image-rendering: pixelated;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-btn::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0,255,255,0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .contact-btn:hover::before { transform:translateX(100%); }
+  .contact-btn:hover {
+    color: #000; background: var(--neon-cyan);
+    box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+    text-shadow: none;
+    transform: translateY(-2px);
+  }
+  .contact-btn.pink { border-color:var(--neon-pink); color:var(--neon-pink); text-shadow:0 0 8px var(--neon-pink); box-shadow:0 0 10px rgba(255,0,255,0.2), inset 0 0 10px rgba(255,0,255,0.05);}
+  .contact-btn.pink:hover { background:var(--neon-pink); color:#000; box-shadow:0 0 20px var(--neon-pink),0 0 40px var(--neon-pink);}
+  .contact-btn.green { border-color:var(--neon-green); color:var(--neon-green); text-shadow:0 0 8px var(--neon-green); box-shadow:0 0 10px rgba(57,255,20,0.2);}
+  .contact-btn.green:hover { background:var(--neon-green); color:#000; box-shadow:0 0 20px var(--neon-green),0 0 40px var(--neon-green);}
+  .contact-btn.yellow { border-color:var(--neon-yellow); color:var(--neon-yellow); text-shadow:0 0 8px var(--neon-yellow); box-shadow:0 0 10px rgba(255,255,0,0.2);}
+  .contact-btn.yellow:hover { background:var(--neon-yellow); color:#000; box-shadow:0 0 20px var(--neon-yellow),0 0 40px var(--neon-yellow);}
+
+  /* PIXEL DECORATION */
+  .pixel-deco {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes float {
+    0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)}
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 40px;
+  }
+  .section-header .header-icon { font-size: 1.5rem; animation: spin-once 0.5s ease; }
+  .section-header span { 
+    letter-spacing: 2px;
+    position: relative;
+  }
+  .section-header span::after {
+    content:''; position:absolute; bottom:-8px; left:0;
+    height:3px; width:100%;
+    background: linear-gradient(90deg, currentColor, transparent);
+    animation: expand-line 1s ease both;
+  }
+  @keyframes expand-line { from{width:0} to{width:100%} }
+
+  .section-cyan { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
+  .section-green { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); }
+  .section-pink { color: var(--neon-pink); text-shadow: 0 0 15px var(--neon-pink); }
+  .section-yellow { color: var(--neon-yellow); text-shadow: 0 0 15px var(--neon-yellow); }
+  .section-orange { color: var(--neon-orange); text-shadow: 0 0 15px var(--neon-orange); }
+
+  .section-pad { padding: 80px 0; }
+
+  /* DIVIDER */
+  .pixel-divider {
+    width: 100%; height: 4px;
+    background: repeating-linear-gradient(90deg, var(--neon-cyan) 0 8px, transparent 8px 16px);
+    margin: 0;
+    opacity: 0.5;
+  }
+
+  /* ABOUT */
+  .about-card {
+    background: var(--bg-card);
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0,255,255,0.1), inset 0 0 30px rgba(0,255,255,0.03);
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: 'PLAYER 1';
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    color: var(--neon-cyan);
+    opacity: 0.15;
+    position: absolute; top: 10px; right: 10px;
+    letter-spacing: 2px;
+  }
+  .about-card p { font-family: 'VT323', monospace; font-size: 1.3rem; line-height: 1.8; color: #c0c0e0; }
+
+  .stat-box {
+    border: 2px solid;
+    padding: 16px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .stat-box:hover { transform: scale(1.05); }
+  .stat-box .stat-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.5rem;
+    display: block;
+    animation: count-up 2s ease both;
+  }
+  .stat-box .stat-label {
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-top: 4px;
+    display: block;
+  }
+  .stat-cyan { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,255,255,0.2);}
+  .stat-green { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(57,255,20,0.2);}
+  .stat-pink { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 15px rgba(255,0,255,0.2);}
+  .stat-yellow { border-color: var(--neon-yellow); color: var(--neon-yellow); box-shadow: 0 0 15px rgba(255,255,0,0.2);}
+
+  /* SKILLS */
+  .skill-category {
+    background: var(--bg-card2);
+    border: 2px solid var(--neon-green);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 15px rgba(57,255,20,0.1);
+  }
+  .skill-category h6 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--neon-green);
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  .skill-tag {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    padding: 6px 10px;
+    border: 1px solid;
+    margin: 3px;
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .skill-tag:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  .tag-cyan { border-color:var(--neon-cyan); color:var(--neon-cyan); }
+  .tag-cyan:hover { background:var(--neon-cyan); color:#000; }
+  .tag-green { border-color:var(--neon-green); color:var(--neon-green); }
+  .tag-green:hover { background:var(--neon-green); color:#000; }
+  .tag-pink { border-color:var(--neon-pink); color:var(--neon-pink); }
+  .tag-pink:hover { background:var(--neon-pink); color:#000; }
+  .tag-yellow { border-color:var(--neon-yellow); color:var(--neon-yellow); }
+  .tag-yellow:hover { background:var(--neon-yellow); color:#000; }
+  .tag-orange { border-color:var(--neon-orange); color:var(--neon-orange); }
+  .tag-orange:hover { background:var(--neon-orange); color:#000; }
+
+  /* EXPERIENCE TIMELINE */
+  .exp-timeline { position: relative; }
+  .exp-timeline::before {
+    content: '';
+    position: absolute; left: 20px; top: 0; bottom: 0;
+    width: 2px;
+    background: repeating-linear-gradient(180deg, var(--neon-cyan) 0 10px, transparent 10px 20px);
+  }
+  .exp-item {
+    padding-left: 60px;
+    margin-bottom: 40px;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s ease;
+  }
+  .exp-item.visible { opacity: 1; transform: translateX(0); }
+  .exp-dot {
+    position: absolute; left: 10px; top: 12px;
+    width: 22px; height: 22px;
+    background: var(--bg-dark);
+    border: 3px solid var(--neon-cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100%{box-shadow:0 0 0 0 rgba(0,255,255,0.4)} 50%{box-shadow:0 0 0 8px rgba(0,255,255,0)}
+  }
+  .exp-card {
+    background: var(--bg-card);
+    border: 2px solid var(--neon-cyan);
+    padding: 20px 24px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .exp-card::after {
+    content:''; position:absolute; top:0; left:0;
+    width:4px; height:100%;
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-pink));
+  }
+  .exp-org {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.65rem;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 8px var(--neon-yellow);
+  }
+  .exp-role {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: var(--neon-cyan);
+    margin: 4px 0;
+    font-weight: 700;
+  }
+  .exp-date {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.45rem;
+    color: var(--neon-pink);
+    margin-bottom: 10px;
+  }
+  .exp-date.active { color: var(--neon-green); }
+  .exp-date.active::before { content: '▶ '; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .exp-card ul { padding-left: 20px; }
+  .exp-card li {
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    color: #b0b0d0;
+    margin: 4px 0;
+    list-style: none;
+    position: relative;
+    padding-left: 16px;
+  }
+  .exp-card li::before { content:'► '; color: var(--neon-cyan); font-size: 0.7rem; position:absolute; left:0; top:3px; }
+
+  /* REPOS */
+  .repo-card {
+    background: var(--bg-card);
+    border: 2px solid var(--neon-pink);
+    padding: 20px;
+    height: 100%;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    box-shadow: 0 0 10px rgba(255,0,255,0.1);
+  }
+  .repo-card::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(255,0,255,0.05) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .repo-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 30px rgba(0,255,255,0.2), 0 0 20px rgba(255,0,255,0.1); color: inherit; }
+  .repo-card:hover::before { opacity: 1; }
+  .repo-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--neon-pink);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .repo-desc {
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    color: #9090b0;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .repo-lang {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    padding: 4px 8px;
+    border: 1px solid var(--neon-orange);
+    color: var(--neon-orange);
+    display: inline-block;
+  }
+  .repo-stars {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    color: var(--neon-yellow);
+    margin-left: 8px;
+  }
+  .repo-card .repo-corner {
+    position: absolute; top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 30px 30px 0;
+    border-color: transparent var(--neon-pink) transparent transparent;
+    transition: border-color 0.3s;
+  }
+  .repo-card:hover .repo-corner { border-color: transparent var(--neon-cyan) transparent transparent; }
+  #repos-loading {
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--neon-pink);
+    padding: 40px;
+    animation: blink 1s infinite;
+  }
+
+  /* EDUCATION */
+  .edu-card {
+    background: var(--bg-card);
+    border: 2px solid var(--neon-yellow);
+    padding: 24px;
+    box-shadow: 0 0 15px rgba(255,255,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .edu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,255,0,0.2); }
+  .edu-card::before {
+    content:''; position:absolute; bottom:0; right:0;
+    width:80px; height:80px;
+    background: radial-gradient(circle, rgba(255,255,0,0.08), transparent 70%);
+  }
+  .edu-degree {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 8px var(--neon-yellow);
+    margin-bottom: 8px;
+    line-height: 1.8;
+  }
+  .edu-school {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: var(--neon-cyan);
+    font-weight: 700;
+  }
+  .edu-year {
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    color: var(--neon-green);
+    margin-top: 6px;
+  }
+
+  /* PUBLICATION */
+  .pub-card {
+    background: var(--bg-card);
+    border: 2px solid var(--neon-orange);
+    padding: 24px;
+    box-shadow: 0 0 15px rgba(255,102,0,0.1);
+  }
+  .pub-card h6 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--neon-orange);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+  .pub-card p { font-family: 'VT323', monospace; font-size: 1.2rem; color: #b0b0d0; line-height: 1.6; }
+  .pub-card a { color: var(--neon-cyan); text-decoration: none; }
+  .pub-card a:hover { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+
+  /* FINAL ANIMATION SECTION */
+  #game-over {
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: radial-gradient(ellipse at center, #0d0d2b 0%, #050510 80%);
+    overflow: hidden;
+    position: relative;
+  }
+  .game-over-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1rem, 5vw, 3rem);
+    animation: rainbow 3s linear infinite, glitch 4s infinite;
+  }
+  @keyframes rainbow {
+    0%{color:#ff0000} 16%{color:#ff6600} 33%{color:#ffff00} 50%{color:#00ff00} 66%{color:#00ffff} 83%{color:#ff00ff} 100%{color:#ff0000}
+  }
+  .insert-coin {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(0.5rem, 2vw, 0.8rem);
+    color: var(--neon-yellow);
+    animation: blink 1s infinite;
+    margin-top: 24px;
+    text-shadow: 0 0 15px var(--neon-yellow);
+  }
+  .score-display {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--neon-cyan);
+    margin-top: 16px;
+    letter-spacing: 2px;
+  }
+
+  /* PIXEL ART CHARACTERS */
+  .pixel-char {
+    font-size: 3rem;
+    display: inline-block;
+    margin: 0 10px;
+  }
+  .walk-anim { animation: walk 0.4s steps(2) infinite; }
+  @keyframes walk { 0%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* BOUNCE IN animation */
+  .bounce-in {
+    opacity: 0;
+    animation: bounceIn 0.6s cubic-bezier(0.68,-0.55,0.265,1.55) both;
+  }
+  @keyframes bounceIn {
+    from{opacity:0;transform:scale(0.3)} to{opacity:1;transform:scale(1)}
+  }
+
+  /* FADE-UP on scroll */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* GRID BACKGROUND SECTION */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #050510; }
+  ::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-subtitle { white-space: normal; border-right: none; animation: none; }
+    .exp-timeline::before { display: none; }
+    .exp-item { padding-left: 0; }
+    .exp-dot { display: none; }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap { overflow: hidden; background: rgba(0,255,255,0.05); border-top: 1px solid rgba(0,255,255,0.2); border-bottom: 1px solid rgba(0,255,255,0.2); padding: 10px 0; }
+  .marquee-track {
+    display: flex; gap: 60px;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .marquee-item {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--neon-cyan);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex justify-content-center align-items-center header-transparent">
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
 
-    <nav id="navbar" class="navbar">
-      <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-        <li><a class="nav-link scrollto" href="#about">About</a></li>
-        <li><a class="nav-link scrollto" href="#resume">Resume</a></li>
-        <li><a class="nav-link scrollto" href="#services">Frameworks</a></li>
-        <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-      </ul>
-      <i class="bi bi-list mobile-nav-toggle"></i>
-    </nav><!-- .navbar -->
+<!-- Stars Canvas -->
+<canvas id="stars-canvas"></canvas>
 
-  </header><!-- End Header -->
-
-  <!-- ======= Hero Section ======= -->
-  <section id="hero">
-    <div class="hero-container">
-      <div class="boxes">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <h1>Aromal P Shaji</h1>
-      <h2 id="typewriter"></h2>
-      <a href="#about" class="btn-scroll scrollto" title="Scroll Down"><i class="bx bx-chevron-down"></i></a>
+<!-- NAVBAR -->
+<nav class="pixel-nav">
+  <div class="container d-flex align-items-center justify-content-between">
+    <span class="brand">APS.EXE</span>
+    <div class="d-flex gap-1 flex-wrap">
+      <a href="#about" class="nav-link-pixel">ABOUT</a>
+      <a href="#experience" class="nav-link-pixel">EXP</a>
+      <a href="#repos" class="nav-link-pixel">REPOS</a>
+      <a href="#education" class="nav-link-pixel">EDU</a>
+      <a href="#game-over" class="nav-link-pixel">END</a>
     </div>
-  </section><!-- End Hero -->
+  </div>
+</nav>
 
-  <main id="main">
+<!-- HERO -->
+<section id="hero">
+  <div class="mb-3">
+    <span class="pixel-char walk-anim">🕹️</span>
+    <span class="pixel-char" style="animation:float 2s ease-in-out infinite 0.5s">⚡</span>
+    <span class="pixel-char walk-anim" style="animation-delay:0.2s">💾</span>
+  </div>
 
-    <!-- ======= About Me Section ======= -->
-    <section id="about" class="about">
-      <div class="container">
+  <div style="font-family:'Press Start 2P';font-size:0.55rem;color:var(--neon-green);margin-bottom:12px;opacity:0.7;letter-spacing:3px;">
+    ▶ PRESS START — STAGE 01
+  </div>
 
-        <div class="section-title">
-          <span>About Me</span>
-          <h2>About Me</h2>
-          <p> I am a Junior Research Fellow and Software Developer with expertise in Python, Django, Flask, PHP (Laravel, CodeIgniter), and Java (JSP, Servlets). Currently, I am working on a RUSA project at Mahatma Gandhi University focused on developing an automated examination system. I completed my masters in computer application from Saintgits college of Engineering, Kottayam and I completed bachelors in computer application from Saintgits College of Applied Sciences, Kottayam.</p>
-        </div>
+  <h1 class="hero-title">AROMAL P SHAJI</h1>
+  <div style="font-family:'VT323';font-size:1.4rem;color:var(--neon-pink);text-shadow:0 0 8px var(--neon-pink);margin-top:6px;">
+    SOFTWARE DEVELOPER · FULL STACK · ML INTEGRATION
+  </div>
+  <div class="hero-subtitle mt-2">
+    &gt; BUILDING SYSTEMS THAT SCALE TO 140,000+ RECORDS_
+  </div>
 
-        <div class="row">
-          <div class="image col-lg-4 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
-          <div class="col-lg-8 d-flex flex-column align-items-stretch">
-            <div class="content ps-lg-4 d-flex flex-column justify-content-center">
-              <div class="row">
-                <div class="col-lg-6">
-                  <ul>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Name:</strong> <span>Aromal P Shaji</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Profile:</strong> <span>https://aromalshaji.github.io/portfolio/</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+91 725821775</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>Kottayam, Kerala, India</span></li>
-                  </ul>
-                </div>
-                <div class="col-lg-6">
-                  <ul>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span>24</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>aromalpshaji10@gmail.com</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="row mt-n4">
-                <div class="col-md-6 mt-5 d-md-flex align-items-md-stretch">
-                  <div class="count-box">
-                    <i class="bi bi-clock" style="color: #0283ae;"></i>
-                    <span data-purecounter-start="0" data-purecounter-end="10" data-purecounter-duration="1" class="purecounter"></span>
-                    <p><strong>Months of Experience</strong></p>
-                  </div>
-                </div>
+  <div class="hero-contact-strip mt-4">
+    <a href="mailto:aromalpshaji10@gmail.com" class="contact-btn yellow">
+      <i class="fas fa-envelope"></i> EMAIL
+    </a>
+    <a href="https://linkedin.com/in/aromalpshaji" target="_blank" class="contact-btn pink">
+      <i class="fab fa-linkedin"></i> LINKEDIN
+    </a>
+    <a href="https://github.com/AromalShaji" target="_blank" class="contact-btn">
+      <i class="fab fa-github"></i> GITHUB
+    </a>
+    <a href="tel:+917025821775" class="contact-btn green">
+      <i class="fas fa-phone"></i> CALL
+    </a>
+  </div>
 
-                <div class="col-md-6 mt-5 d-md-flex align-items-md-stretch">
-                  <div class="count-box">
-                    <i class="bi bi-bookmark-check" style="color: #8a1ac2;"></i>
-                    <span data-purecounter-start="0" data-purecounter-end="14" data-purecounter-duration="1" class="purecounter"></span>
-                    <p><strong>Projects</strong> All projects are Available in my GitHub</p>
-                  </div>
-                </div>
-            </div><!-- End .content-->
+  <div style="margin-top:40px;font-family:'Press Start 2P';font-size:0.5rem;color:rgba(0,255,255,0.4);animation:blink 1.5s infinite;">
+    ▼ SCROLL TO CONTINUE ▼
+  </div>
+</section>
 
-            <div class="skills-content ps-lg-4">
-              <div class="progress">
-                <span class="skill">Python <i class="val">100%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
+<!-- MARQUEE STRIP -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">◆ PHP LARAVEL</span>
+    <span class="marquee-item">◆ PYTHON DJANGO</span>
+    <span class="marquee-item">◆ REACT JS</span>
+    <span class="marquee-item">◆ ML OCR PIPELINE</span>
+    <span class="marquee-item">◆ MYSQL MONGODB</span>
+    <span class="marquee-item">◆ REST API DESIGN</span>
+    <span class="marquee-item">◆ RBAC SYSTEMS</span>
+    <span class="marquee-item">◆ 99% UPTIME</span>
+    <span class="marquee-item">◆ PHP LARAVEL</span>
+    <span class="marquee-item">◆ PYTHON DJANGO</span>
+    <span class="marquee-item">◆ REACT JS</span>
+    <span class="marquee-item">◆ ML OCR PIPELINE</span>
+    <span class="marquee-item">◆ MYSQL MONGODB</span>
+    <span class="marquee-item">◆ REST API DESIGN</span>
+    <span class="marquee-item">◆ RBAC SYSTEMS</span>
+    <span class="marquee-item">◆ 99% UPTIME</span>
+  </div>
+</div>
 
-              <div class="progress">
-                <span class="skill">PHP <i class="val">100%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
+<!-- ABOUT -->
+<section id="about" class="section-pad grid-bg">
+  <div class="container">
+    <div class="section-header section-cyan fade-up">
+      <span class="header-icon">🖥️</span>
+      <span>PLAYER STATS</span>
+    </div>
 
-              <div class="progress">
-                <span class="skill">HTML <i class="val">100%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-
-              <div class="progress">
-                <span class="skill">CSS <i class="val">90%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-
-              <div class="progress">
-                <span class="skill">JavaScript <i class="val">90%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End About Me Section -->
-
-    <!-- ======= My Resume Section ======= -->
-    <section id="resume" class="resume">
-      <div class="container">
-
-        <div class="section-title">
-          <span>My Resume</span>
-          <h2>My Resume</h2>
+    <div class="row g-4 mb-4">
+      <div class="col-md-8 fade-up">
+        <div class="about-card">
           <p>
-            <a class="text-info" href="assets/img/AROMAL P SHAJI(RESUME).pdf" download="Aromal P Shaji(RESUME).pdf">Click here to download my resume as pdf</a>
+            Full-Stack Developer with 2+ years crafting scalable Laravel-based systems at Mahatma Gandhi University.
+            I architect backend platforms that process <strong style="color:var(--neon-cyan)">140,000+ examination scripts per cycle</strong> with
+            8,000+ concurrent evaluators and <strong style="color:var(--neon-green)">99% system uptime</strong>.
+            <br><br>
+            My ML-driven OCR pipelines achieve <strong style="color:var(--neon-pink)">95%+ handwritten mark extraction accuracy</strong>,
+            eliminating 500+ hours of manual work per exam cycle. I specialize in workflow automation,
+            RBAC security, RESTful API design, and building resilient examination platforms trusted by thousands.
+            <br><br>
+            Also a published researcher in Springer on automated examination systems in Indian higher education.
           </p>
-          
-          <p>Aspiring to apply my skills and experience in a dynamic environment where I can make a significant impact and continue to learn and grow.</p>
         </div>
-
-        <div class="row">
-          <div class="col-lg-6">
-            <h3 class="resume-title">Education</h3>
-            <div class="resume-item">
-              <h4>Master in &amp; Computer Applications</h4>
-              <h5>2021 - 2023</h5>
-              <p><em>Saintgits College of Engineering, Kottayam, Kerala, India</em></p>
-            </div>
-            <div class="resume-item">
-              <h4>Bachelor in &amp; Computer Applications</h4>
-              <h5>2018 - 2021</h5>
-              <p><em>Saintgits College of Applied Sciences, Kottayam, Kerala, India</em></p>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <h3 class="resume-title">Professional Experience</h3>
-            <div class="resume-item">
-              <h4>Junior Research Fellow</h4>
-              <h5>Aug/2024 - Present</h5>
-              <p><em>Mahatma Gandhi University, Kottayam, Kerala, India</em></p>
-              <p>
-              <ul>
-                <li>Study and analysis of automated examination system in higher
-                  educational institutions and design and development of unique model for
-                  mahatma gandhi university</li>
-              </ul>
-              </p>
-            </div>
-            <div class="resume-item">
-              <h4>Project Assistant</h4>
-              <h5>Jan/2024 - July/2024</h5>
-              <p><em>Mahatma Gandhi University, Kottayam, Kerala, India</em></p>
-              <p>
-              <ul>
-                <li>Study and analysis of automated examination system in higher
-                  educational institutions and design and development of unique model for
-                  mahatma gandhi university</li>
-              </ul>
-              </p>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </section><!-- End My Resume Section -->
-
-    <!-- ======= My Services Section ======= -->
-    <section id="services" class="services">
-      <div class="container">
-
-        <div class="section-title">
-          <span>FRAMEWORKS</span>
-          <h2>FRAMEWORKS</h2>
-          <p>Framework that i use</p>
+      <div class="col-md-4">
+        <div class="row g-3">
+          <div class="col-6 fade-up"><div class="stat-box stat-cyan"><span class="stat-num" data-target="140">0</span><small>K+</small><span class="stat-label">RECORDS/CYCLE</span></div></div>
+          <div class="col-6 fade-up"><div class="stat-box stat-green"><span class="stat-num" data-target="8">0</span><small>K+</small><span class="stat-label">EVALUATORS</span></div></div>
+          <div class="col-6 fade-up"><div class="stat-box stat-pink"><span class="stat-num" data-target="99">0</span><small>%</small><span class="stat-label">UPTIME</span></div></div>
+          <div class="col-6 fade-up"><div class="stat-box stat-yellow"><span class="stat-num" data-target="500">0</span><small>+</small><span class="stat-label">HRS SAVED</span></div></div>
         </div>
-
-        <div class="row">
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bxl-laravel">L</i></div>
-              <h4 class="title"><a href="#Laravel">Laravel</a></h4>
-              <p class="description">A robust PHP framework known for its elegant syntax, built-in tools, and MVC architecture to streamline web development and promote clean, maintainable code.</p>
-            </div>
-          </div>
-        
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-">CI</i></div>
-              <h4 class="title"><a href="#CodeIgniter">CodeIgniter</a></h4>
-              <p class="description">A lightweight PHP framework designed for developers who need a simple and elegant toolkit to create full-featured web applications.</p>
-            </div>
-          </div>
-        
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-">DJ</i></div>
-              <h4 class="title"><a href="#Django">Django</a></h4>
-              <p class="description">A high-level Python framework that encourages rapid development and clean, pragmatic design, with a strong emphasis on reusability and "don’t repeat yourself" (DRY) principles.</p>
-            </div>
-          </div>
-        
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-">FL</i></div>
-              <h4 class="title"><a href="#Flask">Flask</a></h4>
-              <p class="description">A microframework for Python based on Werkzeug and Jinja2, ideal for small to medium-sized applications, providing simplicity and flexibility with minimal overhead.</p>
-            </div>
-          </div>
-        </div>
-        
-
-      </div>
-    </section><!-- End My Services Section -->
-
-    <!-- ======= My Portfolio Section ======= -->
-    <section id="portfolio" class="portfolio">
-      <div class="container">
-
-        <div class="section-title">
-          <span>My Github</span>
-          <h2>My Github</h2>
-          <p>Active Project in GitHub</p>
-        </div>
-
-        <ul id="portfolio-flters" class="d-flex justify-content-center">
-          <li data-filter="*" class="filter-active">All</li>
-          <li data-filter=".filter-python">Python</li>
-          <li data-filter=".filter-php">PHP</li>
-          <li data-filter=".filter-java">Java</li>
-        </ul>
-
-        <div class="row portfolio-container">
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-java">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-7.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Event Management Sytem</h4>
-              <p>Java</p>
-              <a href="https://github.com/AromalShaji/Event-Management-Project-Servlet" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-2.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Image Mosaicking</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/ImageMosaicking" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-3.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Sea route optimizer</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/Sea-route-optimizer" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-4.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Bingo Game</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/PythonBingo" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-5.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Garbage Management System</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/GarbageManagementSystem-DjangoSqlite" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-6.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Turf Booking System</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/Turf-Booking-System-django-" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-python">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-1.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Google Translator</h4>
-              <p>Python</p>
-              <a href="https://github.com/AromalShaji/GoogleTranslatior" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-php">
-            <div class="portfolio-img"><img src="assets/img/portfolio/portfolio-8.png" class="img-fluid" alt=""></div>
-            <div class="portfolio-info">
-              <h4>Laravel Sanctum API</h4>
-              <p>PHP</p>
-              <a href="https://github.com/AromalShaji/laravel-sanctum-api" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-        
-        </div>
-
-      </div>
-    </section><!-- End My Portfolio Section -->
-
-
-    <!-- ======= Contact Me Section ======= -->
-    <section id="contact" class="contact">
-      <div class="container">
-
-        <div class="section-title">
-          <span>Contact Me</span>
-          <h2>Contact Me</h2>
-        </div>
-
-        <div class="row">
-
-          <div class="col-lg-12">
-
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="info-box">
-                  <i class="bx bx-share-alt"></i>
-                  <h3>Social Profiles</h3>
-                  <div class="social-links">
-                    <a href="https://www.youtube.com/@aps9730" class="youtube" style="border: none;"><i class="bx bxl-youtube"></i></a>
-                    <a href="https://www.instagram.com/aromallps" class="instagram" style="border: none;"><i class="bx bxl-instagram"></i></a>
-                    <a href="https://github.com/AromalShaji" class="google-plus" style="border: none;"><i class="bx bxl-github"></i></a>
-                    <a href="https://www.linkedin.com/in/aromal-p-shaji-887123226" class="linkedin" style="border: none;"><i class="bx bxl-linkedin"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="info-box mt-4">
-                    <i class="bx bx-envelope"></i>
-                    <h3>Email Me</h3>
-                    <p>aromalpshaji10@gmail.com</p>
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="info-box mt-4">
-                    <i class="bx bx-phone-call"></i>
-                    <h3>Call Me</h3>
-                    <p>+91 7025821775</p>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section><!-- End Contact Me Section -->
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-    <div class="container">
-      <div class="boxes">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <h3>Aromal P Shaji</h3>
-      <p>Getting a quality website is not an expenses but rather an investment</p>
-      <div class="social-links">
-        <a href="https://www.youtube.com/@aps9730" class="youtube"><i class="bx bxl-youtube"></i></a>
-        <a href="https://www.instagram.com/aromallps" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="https://github.com/AromalShaji" class="google-plus"><i class="bx bxl-github"></i></a>
-        <a href="https://www.linkedin.com/in/aromal-p-shaji-887123226" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-      <div class="copyright">
-      </div>
-      <div class="credits">
-        Designed by <a href="#">Aromalpshaji</a>
       </div>
     </div>
-  </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- SKILLS -->
+    <div class="section-header section-green fade-up mt-5">
+      <span class="header-icon">⚔️</span>
+      <span>SKILL TREE</span>
+    </div>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+    <div class="row g-3">
+      <div class="col-md-4 fade-up">
+        <div class="skill-category">
+          <h6>⚡ LANGUAGES & FRAMEWORKS</h6>
+          <span class="skill-tag tag-cyan">PHP</span>
+          <span class="skill-tag tag-cyan">Laravel</span>
+          <span class="skill-tag tag-cyan">CodeIgniter</span>
+          <span class="skill-tag tag-green">Python</span>
+          <span class="skill-tag tag-green">Django</span>
+          <span class="skill-tag tag-green">Flask</span>
+          <span class="skill-tag tag-yellow">JavaScript</span>
+          <span class="skill-tag tag-yellow">React</span>
+        </div>
+      </div>
+      <div class="col-md-4 fade-up">
+        <div class="skill-category">
+          <h6>💾 BACKEND & DATABASE</h6>
+          <span class="skill-tag tag-pink">RESTful API</span>
+          <span class="skill-tag tag-pink">System Design</span>
+          <span class="skill-tag tag-pink">RBAC</span>
+          <span class="skill-tag tag-orange">MySQL</span>
+          <span class="skill-tag tag-orange">MongoDB</span>
+          <span class="skill-tag tag-orange">Redis</span>
+          <span class="skill-tag tag-orange">SQLite</span>
+          <span class="skill-tag tag-cyan">Workflow Auto</span>
+        </div>
+      </div>
+      <div class="col-md-4 fade-up">
+        <div class="skill-category">
+          <h6>🤖 TOOLS & ML</h6>
+          <span class="skill-tag tag-green">Tesseract OCR</span>
+          <span class="skill-tag tag-green">ML Pipelines</span>
+          <span class="skill-tag tag-green">Image Preprocessing</span>
+          <span class="skill-tag tag-yellow">Git</span>
+          <span class="skill-tag tag-yellow">Linux</span>
+          <span class="skill-tag tag-yellow">Postman</span>
+          <span class="skill-tag tag-cyan">API Testing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+<div class="pixel-divider"></div>
 
+<!-- EXPERIENCE -->
+<section id="experience" class="section-pad">
+  <div class="container">
+    <div class="section-header section-pink fade-up">
+      <span class="header-icon">🎮</span>
+      <span>QUEST LOG — EXPERIENCE</span>
+    </div>
+
+    <div class="exp-timeline">
+
+      <div class="exp-item fade-up">
+        <div class="exp-dot">★</div>
+        <div class="exp-card">
+          <div class="exp-org">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
+          <div class="exp-role">Senior Software Developer</div>
+          <div class="exp-date active">APR 2025 — PRESENT</div>
+          <ul>
+            <li>Architected Laravel-based exam valuation platform supporting 8,000+ concurrent evaluators</li>
+            <li>Scaled backend to process 140,000+ exam scripts per cycle with 99% reliability</li>
+            <li>Designed RBAC workflows across valuation, scrutiny, revaluation & results for 100% controlled access</li>
+            <li>Integrated ML-driven OCR pipelines achieving 95%+ handwritten mark extraction accuracy</li>
+            <li>Eliminated 95% manual data entry, saving 500+ operational hours per cycle</li>
+            <li>Optimized evaluator allocation algorithms — 40-50% reduction in result processing time</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-dot">◆</div>
+        <div class="exp-card" style="border-color:var(--neon-green);">
+          <div class="exp-org" style="color:var(--neon-green)">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
+          <div class="exp-role" style="color:var(--neon-green)">Junior Research Fellow</div>
+          <div class="exp-date" style="color:var(--neon-green)">AUG 2024 — MAR 2025</div>
+          <ul>
+            <li>Led research & automation for exam platforms serving 10,000+ students per cycle</li>
+            <li>Designed 4+ automation strategies improving scalability & reducing manual intervention</li>
+            <li>Engineered 5+ modern exam workflows across core academic operations</li>
+            <li>Eliminated 3+ legacy manual processes via automated backend solutions</li>
+            <li>Collaborated with 50+ faculty & administrators to refine grading logic</li>
+            <li>Executed 100+ end-to-end test scenarios; managed 10+ production deployments</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-dot">▲</div>
+        <div class="exp-card" style="border-color:var(--neon-yellow);">
+          <div class="exp-org" style="color:var(--neon-yellow)">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
+          <div class="exp-role" style="color:var(--neon-yellow)">Project Assistant</div>
+          <div class="exp-date" style="color:var(--neon-yellow)">JAN 2024 — JUL 2024</div>
+          <ul>
+            <li>Analyzed 5+ legacy workflows across 10+ departments — 60%+ efficiency gains in pilots</li>
+            <li>Authored technical specs for 3 enterprise modules with 45+ API endpoints</li>
+            <li>Executed QA across 8 modules, identifying 35+ critical defects — bug rate below 0.1%</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PUBLICATION -->
+    <div class="section-header section-orange fade-up mt-5">
+      <span class="header-icon">📖</span>
+      <span>RESEARCH UNLOCKED</span>
+    </div>
+    <div class="pub-card fade-up">
+      <h6>📰 SPRINGER PUBLICATION</h6>
+      <p>
+        <strong style="color:var(--neon-orange)">Study and Analysis of Automated Examination Systems in Indian Higher Educational Institutions:</strong>
+        A Comparative Approach and a Unique Model for Mahatma Gandhi University.
+        <br><br>
+        🔗 DOI: <a href="https://doi.org/10.1007/978-981-96-8796-1_23" target="_blank">doi.org/10.1007/978-981-96-8796-1_23</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="pixel-divider"></div>
+
+<!-- GITHUB REPOS -->
+<section id="repos" class="section-pad grid-bg">
+  <div class="container">
+    <div class="section-header section-pink fade-up">
+      <span class="header-icon">💻</span>
+      <span>GITHUB INVENTORY</span>
+    </div>
+    <div id="repos-loading">LOADING REPOSITORIES... ▓▓▓░░░░░</div>
+    <div id="repos-grid" class="row g-4" style="display:none"></div>
+    <div class="text-center mt-4 fade-up">
+      <a href="https://github.com/AromalShaji?tab=repositories" target="_blank" class="contact-btn pink" style="display:inline-flex;">
+        <i class="fab fa-github"></i>&nbsp; VIEW ALL REPOS
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="pixel-divider"></div>
+
+<!-- EDUCATION -->
+<section id="education" class="section-pad">
+  <div class="container">
+    <div class="section-header section-yellow fade-up">
+      <span class="header-icon">🏫</span>
+      <span>EDUCATION TREE</span>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 fade-up">
+        <div class="edu-card">
+          <div class="edu-degree">🎓 MASTER OF COMPUTER APPLICATIONS</div>
+          <div class="edu-school">Saintgits College of Engineering</div>
+          <div style="font-family:'VT323';color:#9090b0">Kerala, India</div>
+          <div class="edu-year">📅 MAY 2021 — AUG 2023</div>
+        </div>
+      </div>
+      <div class="col-md-6 fade-up">
+        <div class="edu-card">
+          <div class="edu-degree">🎓 BACHELOR OF COMPUTER APPLICATIONS</div>
+          <div class="edu-school">Saintgits College of Applied Sciences</div>
+          <div style="font-family:'VT323';color:#9090b0">Kerala, India</div>
+          <div class="edu-year">📅 MAY 2018 — APR 2021</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pixel-divider"></div>
+
+<!-- GAME OVER / FINAL ANIMATION -->
+<section id="game-over">
+  <canvas id="matrix-canvas" style="position:absolute;inset:0;opacity:0.15;pointer-events:none;"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;padding:40px 20px;">
+    <div class="game-over-text mb-4">LEVEL COMPLETE!</div>
+    <div style="font-family:'Press Start 2P';font-size:0.6rem;color:var(--neon-cyan);margin-bottom:20px;text-shadow:0 0 10px var(--neon-cyan);">
+      AROMAL P SHAJI — FULL STACK DEVELOPER
+    </div>
+    <div class="score-display mb-2">HIGH SCORE: 140,000+ RECORDS</div>
+    <div class="score-display mb-2">ACHIEVEMENT: 99% UPTIME UNLOCKED 🏆</div>
+    <div class="score-display mb-4">XP: 500+ HOURS SAVED</div>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="mailto:aromalpshaji10@gmail.com" class="contact-btn yellow"><i class="fas fa-envelope"></i> HIRE ME</a>
+      <a href="https://linkedin.com/in/aromalpshaji" target="_blank" class="contact-btn pink"><i class="fab fa-linkedin"></i> CONNECT</a>
+      <a href="https://github.com/AromalShaji" target="_blank" class="contact-btn"><i class="fab fa-github"></i> FORK ME</a>
+    </div>
+    <div class="insert-coin mt-5">▶ INSERT COIN TO COLLABORATE ◀</div>
+    <div style="font-family:'Press Start 2P';font-size:0.4rem;color:rgba(0,255,255,0.3);margin-top:30px;">
+      © 2025 AROMAL P SHAJI · MADE WITH 💚 IN KERALA, INDIA
+    </div>
+  </div>
+</section>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ── CURSOR ──────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursor-trail');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = (e.clientX - 8) + 'px';
+  cursor.style.top = (e.clientY - 8) + 'px';
+  setTimeout(() => {
+    trail.style.left = (e.clientX - 4) + 'px';
+    trail.style.top = (e.clientY - 4) + 'px';
+  }, 80);
+});
+
+// ── STARS ────────────────────────────────────────────────
+const sc = document.getElementById('stars-canvas');
+const ctx = sc.getContext('2d');
+let W, H, stars = [];
+function resizeStars() {
+  W = sc.width = window.innerWidth;
+  H = sc.height = window.innerHeight;
+}
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.5+0.3,
+      speed: Math.random()*0.3+0.05,
+      color: ['#00ffff','#ff00ff','#39ff14','#ffff00'][Math.floor(Math.random()*4)],
+      alpha: Math.random()
+    });
+  }
+}
+function drawStars() {
+  ctx.clearRect(0,0,W,H);
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = s.alpha;
+    ctx.fill();
+    s.y += s.speed;
+    s.alpha = 0.3 + 0.7 * Math.abs(Math.sin(Date.now()*0.001 + s.x));
+    if (s.y > H) s.y = 0;
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', () => { resizeStars(); initStars(); });
+resizeStars(); initStars(); drawStars();
+
+// ── MATRIX CANVAS ───────────────────────────────────────
+const mc = document.getElementById('matrix-canvas');
+const mctx = mc.getContext('2d');
+let mW, mH, drops = [];
+function resizeMatrix() {
+  mW = mc.width = mc.offsetWidth;
+  mH = mc.height = mc.offsetHeight;
+  drops = Array(Math.floor(mW/16)).fill(0).map(() => Math.random()*mH/20);
+}
+const chars = '0123456789ABCDEFPHPLARAVEL</>{}[]SELECT*FROM';
+function drawMatrix() {
+  mctx.fillStyle = 'rgba(5,5,16,0.05)';
+  mctx.fillRect(0,0,mW,mH);
+  mctx.fillStyle = '#00ff41';
+  mctx.font = '14px VT323, monospace';
+  drops.forEach((y,i) => {
+    mctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*16, y*20);
+    if (y*20 > mH && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+  requestAnimationFrame(drawMatrix);
+}
+const matrixObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) { resizeMatrix(); drawMatrix(); matrixObserver.disconnect(); }
+});
+matrixObserver.observe(document.getElementById('game-over'));
+
+// ── SCROLL ANIMATIONS ────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), entry.target.dataset.delay || 0);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up, .exp-item').forEach((el, i) => {
+  el.dataset.delay = (i % 5) * 100;
+  observer.observe(el);
+});
+
+// ── COUNTER ANIMATION ────────────────────────────────────
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target.querySelector('[data-target]');
+      if (!el) return;
+      const target = +el.dataset.target;
+      let count = 0;
+      const step = target / 60;
+      const interval = setInterval(() => {
+        count = Math.min(count + step, target);
+        el.textContent = Math.floor(count);
+        if (count >= target) clearInterval(interval);
+      }, 16);
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-box').forEach(el => counterObserver.observe(el));
+
+// ── GITHUB REPOS ─────────────────────────────────────────
+async function loadRepos() {
+  try {
+    const res = await fetch('https://api.github.com/users/AromalShaji/repos?sort=updated&per_page=12&type=public');
+    const repos = await res.json();
+    const grid = document.getElementById('repos-grid');
+    const loading = document.getElementById('repos-loading');
+
+    if (!Array.isArray(repos) || repos.length === 0) {
+      loading.textContent = '> NO PUBLIC REPOS FOUND. CHECK BACK LATER!';
+      return;
+    }
+
+    loading.style.display = 'none';
+    grid.style.display = 'flex';
+    grid.className = 'row g-4';
+
+    const langColors = {
+      'PHP':'#ff00ff','Python':'#39ff14','JavaScript':'#ffff00',
+      'HTML':'#ff6600','CSS':'#00ffff','TypeScript':'#00aaff',
+      'Shell':'#ff9900','null':'#888888'
+    };
+
+    repos.slice(0, 9).forEach((repo, i) => {
+      const col = document.createElement('div');
+      col.className = 'col-md-4 col-sm-6 fade-up';
+      col.style.animationDelay = `${i * 80}ms`;
+      const lang = repo.language || 'N/A';
+      const color = langColors[lang] || '#aaaaaa';
+      col.innerHTML = `
+        <a href="${repo.html_url}" target="_blank" class="repo-card" style="border-color:${color}40">
+          <div class="repo-corner" style="border-color:transparent ${color} transparent transparent"></div>
+          <div class="repo-name" style="color:${color}">${repo.name}</div>
+          <div class="repo-desc">${repo.description || 'No description provided.'}</div>
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <span class="repo-lang" style="border-color:${color};color:${color}">
+              ◉ ${lang}
+            </span>
+            <span class="repo-stars">★ ${repo.stargazers_count}</span>
+            <span style="font-family:'Press Start 2P';font-size:0.35rem;color:var(--neon-cyan)">
+              🍴 ${repo.forks_count}
+            </span>
+          </div>
+        </a>`;
+      grid.appendChild(col);
+      setTimeout(() => col.querySelector('.fade-up') ? col.classList.add('visible') : null, i * 100);
+    });
+
+    // observe newly added cards
+    document.querySelectorAll('#repos-grid .fade-up').forEach(el => observer.observe(el));
+
+  } catch (e) {
+    document.getElementById('repos-loading').textContent = '> GITHUB API RATE LIMITED. VISIT PROFILE DIRECTLY →';
+  }
+}
+loadRepos();
+
+// ── CLICK SPARK ─────────────────────────────────────────
+document.addEventListener('click', e => {
+  const colors = ['#00ffff','#ff00ff','#39ff14','#ffff00'];
+  for (let i = 0; i < 8; i++) {
+    const spark = document.createElement('div');
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 40 + Math.random() * 30;
+    spark.style.cssText = `
+      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:6px;height:6px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      pointer-events:none;z-index:99999;
+      transition:all 0.5s ease-out;
+      box-shadow: 0 0 6px currentColor;
+    `;
+    document.body.appendChild(spark);
+    setTimeout(() => {
+      spark.style.left = (e.clientX + Math.cos(angle) * dist) + 'px';
+      spark.style.top = (e.clientY + Math.sin(angle) * dist) + 'px';
+      spark.style.opacity = '0';
+      spark.style.transform = 'scale(0)';
+    }, 10);
+    setTimeout(() => spark.remove(), 520);
+  }
+});
+
+// ── NAVBAR ACTIVE ─────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const sections = ['hero','about','experience','repos','education','game-over'];
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  });
+  document.querySelectorAll('.nav-link-pixel').forEach(a => {
+    a.style.color = '';
+    if (a.getAttribute('href') === '#'+current) {
+      a.style.color = 'var(--neon-pink)';
+      a.style.textShadow = '0 0 15px var(--neon-pink)';
+    }
+  });
+});
+</script>
 </body>
-
 </html>

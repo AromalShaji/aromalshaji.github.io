@@ -3,1340 +3,1406 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Aromal P Shaji — PIXEL.EXE</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<title>Aromal P Shaji — APS.EXE</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — Muted Retro CRT
+   Palette: Deep navy bg, amber accent, pale green text,
+   dusty cyan, warm white. No blinding neon.
+═══════════════════════════════════════════════════════ */
 :root {
-  --neon-green: #39ff14;
-  --neon-cyan: #00ffff;
-  --neon-pink: #ff00ff;
-  --neon-yellow: #ffff00;
-  --neon-orange: #ff6600;
-  --sky-day: #1a1a2e;
-  --sky-night: #050510;
-  --road: #1a1a1a;
-  --sidewalk: #2a2a2a;
-  --pixel: 4px;
+  --bg:        #0a0c12;
+  --bg2:       #0d1018;
+  --bg3:       #111420;
+  --amber:     #e8a020;
+  --amber-dim: #9a6a10;
+  --green:     #4caf70;
+  --green-dim: #2a6040;
+  --cyan:      #5ab4c8;
+  --cyan-dim:  #2a5870;
+  --pink:      #c060a0;
+  --text:      #c8cce0;
+  --text-dim:  #6870a0;
+  --road:      #161a28;
+  --road-line: #2a3050;
+  --road-w:    44px;
+  --road-r:    22px;          /* half road width = corner radius */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-vt:    'VT323', monospace;
+  --font-mono:  'Share Tech Mono', monospace;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--sky-night);
-  color: #e0e0ff;
-  font-family: 'VT323', monospace;
-  font-size: 18px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 15px;
   overflow-x: hidden;
   cursor: none;
-  image-rendering: pixelated;
 }
 
-/* ── CUSTOM CURSOR ── */
-#cursor {
-  width: 12px; height: 12px;
-  background: var(--neon-cyan);
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 99999;
-  image-rendering: pixelated;
-  clip-path: polygon(0 0,75% 0,75% 25%,100% 25%,100% 75%,75% 75%,75% 100%,0 100%);
-  mix-blend-mode: difference;
-  transition: width 0.1s, height 0.1s;
-}
-#cursor.clicking { width: 8px; height: 8px; background: var(--neon-pink); }
-#cursor-trail {
-  width: 20px; height: 20px;
-  border: 2px solid var(--neon-pink);
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 99998;
-  transition: all 0.15s ease;
-  clip-path: polygon(0 0,4px 0,4px 4px,calc(100% - 4px) 4px,calc(100% - 4px) 0,100% 0,100% 4px,100% calc(100% - 4px),100% 100%,calc(100% - 4px) 100%,calc(100% - 4px) calc(100% - 4px),4px calc(100% - 4px),4px 100%,0 100%,0 calc(100% - 4px),0 4px);
-}
-
-/* ── SCANLINE OVERLAY ── */
-body::before {
+/* ── CRT scanlines overlay ── */
+body::after {
   content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px);
-  pointer-events: none; z-index: 9000;
-  animation: flicker 10s infinite;
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+  animation: crt-flicker 10s infinite;
 }
-@keyframes flicker { 0%,94%,100%{opacity:1} 95%{opacity:.92} 97%{opacity:.97} 99%{opacity:.89} }
+@keyframes crt-flicker {
+  0%,94%,100% { opacity: 1 }
+  95%          { opacity: .92 }
+  97%          { opacity: .97 }
+}
 
-/* ── NAVBAR ── */
-.pixel-nav {
-  position: fixed; top: 0; width: 100%; z-index: 8000;
-  background: rgba(5,5,16,0.95);
-  border-bottom: 3px solid var(--neon-cyan);
-  padding: 8px 0;
-  backdrop-filter: blur(2px);
-  image-rendering: pixelated;
+/* ═══════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════ */
+#cur {
+  position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999;
+  width: 10px; height: 10px;
+  background: var(--amber);
+  clip-path: polygon(0 0,8px 0,8px 2px,10px 2px,10px 8px,8px 8px,8px 10px,0 10px);
+  transform: translate(-5px,-5px);
+  transition: width .1s, height .1s;
+  mix-blend-mode: screen;
+}
+#cur.click { background: var(--cyan); width: 7px; height: 7px; }
+
+/* ═══════════════════════════════════
+   LAYOUT — road rail on left, content offset
+═══════════════════════════════════ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── ROAD RAIL (left side) ── */
+.road-rail {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--road-w);
+  z-index: 500;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* SVG road drawn by JS, fills the rail */
+#road-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+/* ── MAIN CONTENT ── */
+.content {
+  margin-left: var(--road-w);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ═══════════════════════════════════
+   NAV
+═══════════════════════════════════ */
+.nav {
+  position: fixed; top: 0;
+  left: var(--road-w); right: 0;
+  z-index: 800;
+  background: rgba(10,12,18,0.96);
+  border-bottom: 1px solid var(--road-line);
+  padding: 0 24px;
+  height: 48px;
+  display: flex; align-items: center;
+  backdrop-filter: blur(4px);
+  gap: 20px;
 }
 .nav-brand {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.65rem;
-  color: var(--neon-green);
-  text-shadow: 0 0 10px var(--neon-green), 2px 2px 0 rgba(0,0,0,0.8);
-  animation: blink-slow 3s infinite;
+  font-family: var(--font-pixel);
+  font-size: .55rem;
+  color: var(--amber);
+  text-shadow: 0 0 8px rgba(232,160,32,.4);
   letter-spacing: 2px;
-}
-@keyframes blink-slow { 0%,100%{opacity:1} 48%{opacity:1} 50%{opacity:.6} 52%{opacity:1} }
-.nav-link-pixel {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.45rem;
-  color: var(--neon-cyan) !important;
-  padding: 5px 8px !important;
-  border: 1px solid transparent;
-  transition: all 0.1s;
-  letter-spacing: 1px;
-  text-decoration: none;
-  display: inline-block;
-  position: relative;
-}
-.nav-link-pixel::after {
-  content: attr(data-label);
-  position: absolute;
-  bottom: -18px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.35rem;
-  color: var(--neon-yellow);
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
 }
-.nav-link-pixel:hover::after { opacity: 1; }
-.nav-link-pixel:hover {
-  color: var(--neon-yellow) !important;
-  border: 1px solid var(--neon-yellow);
-  background: rgba(255,255,0,0.08);
-  transform: translateY(-1px);
+.nav-links {
+  display: flex; gap: 0; flex-wrap: nowrap;
+  overflow-x: auto; scrollbar-width: none;
+  margin-left: auto;
 }
-
-/* ── HERO CITY SCENE ── */
-#hero {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(180deg, #050510 0%, #0a0520 40%, #0d0830 60%, #100a35 100%);
-}
-
-/* Stars */
-#star-field {
-  position: absolute; inset: 0; pointer-events: none; z-index: 1;
-}
-
-/* Moon */
-.pixel-moon {
-  position: absolute; top: 60px; right: 120px;
-  width: 48px; height: 48px;
-  background: var(--neon-yellow);
-  box-shadow: 0 0 20px var(--neon-yellow), 0 0 40px rgba(255,255,0,0.3);
-  z-index: 2;
-  image-rendering: pixelated;
-  clip-path: polygon(
-    4px 0, 44px 0, 44px 4px, 48px 4px, 48px 44px, 44px 44px, 44px 48px, 4px 48px, 4px 44px, 0 44px, 0 4px, 4px 4px
-  );
-  animation: moon-glow 4s ease-in-out infinite;
-}
-@keyframes moon-glow { 0%,100%{box-shadow:0 0 20px var(--neon-yellow),0 0 40px rgba(255,255,0,.3)} 50%{box-shadow:0 0 30px var(--neon-yellow),0 0 60px rgba(255,255,0,.5)} }
-
-/* City Buildings Layer */
-.city-layer {
-  position: absolute;
-  bottom: 140px;
-  width: 100%;
-  z-index: 3;
-  display: flex;
-  align-items: flex-end;
-  gap: 0;
-  pointer-events: none;
-}
-
-.city-far {
-  position: absolute;
-  bottom: 160px;
-  left: 0; width: 100%;
-  display: flex;
-  align-items: flex-end;
-  z-index: 2;
-  animation: scroll-far 60s linear infinite;
-}
-.city-mid {
-  position: absolute;
-  bottom: 145px;
-  left: 0; width: 100%;
-  display: flex;
-  align-items: flex-end;
-  z-index: 3;
-  animation: scroll-mid 30s linear infinite;
-}
-.city-near {
-  position: absolute;
-  bottom: 140px;
-  left: 0; width: 100%;
-  display: flex;
-  align-items: flex-end;
-  z-index: 4;
-  animation: scroll-near 15s linear infinite;
-}
-
-@keyframes scroll-far  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes scroll-mid  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes scroll-near { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-
-/* Pixel Buildings */
-.bld {
-  display: inline-block;
-  image-rendering: pixelated;
-  flex-shrink: 0;
-  position: relative;
-}
-
-/* Road */
-.road {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 140px;
-  background: #111118;
-  z-index: 5;
-  border-top: 4px solid #222;
-}
-.road-line {
-  position: absolute;
-  top: 50%; left: 0; right: 0;
-  height: 4px;
-  background: repeating-linear-gradient(90deg, var(--neon-yellow) 0 40px, transparent 40px 80px);
-  animation: road-scroll 0.5s linear infinite;
-}
-@keyframes road-scroll { from{background-position:0 0} to{background-position:-80px 0} }
-.road-line-left {
-  top: 25%;
-  background: repeating-linear-gradient(90deg, #444 0 40px, transparent 40px 80px);
-  animation: road-scroll 0.5s linear infinite;
-}
-.road-line-right {
-  top: 75%;
-  background: repeating-linear-gradient(90deg, #444 0 40px, transparent 40px 80px);
-  animation: road-scroll 0.5s linear infinite;
-}
-.sidewalk {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 18px;
-  background: repeating-linear-gradient(90deg, #2a2a3a 0 8px, #222230 8px 16px);
-  border-top: 2px solid #333;
-}
-
-/* Pixel Car */
-.car-container {
-  position: absolute;
-  bottom: 52px; left: -160px;
-  z-index: 10;
-  animation: drive 6s linear infinite;
-  filter: drop-shadow(0 4px 8px rgba(0,255,255,0.5));
-}
-@keyframes drive {
-  from { left: -160px; }
-  to { left: calc(100% + 20px); }
-}
-.pixel-car {
-  width: 120px;
-  height: 56px;
-  image-rendering: pixelated;
-  display: block;
-}
-
-/* Background cars (smaller, different speeds) */
-.car-bg {
-  position: absolute;
-  z-index: 8;
-  bottom: 90px;
-  opacity: 0.5;
-  filter: drop-shadow(0 2px 4px rgba(255,0,255,0.3));
-}
-.car-bg-1 { animation: drive-bg1 9s linear infinite; bottom: 96px; }
-.car-bg-2 { animation: drive-bg2 12s linear 3s infinite; bottom: 96px; }
-@keyframes drive-bg1 { from{left:-80px} to{left:calc(100% + 20px)} }
-@keyframes drive-bg2 { from{left:-80px} to{left:calc(100% + 20px)} }
-
-/* Oncoming car */
-.car-oncoming {
-  position: absolute;
-  bottom: 66px;
-  right: -120px;
-  z-index: 9;
-  transform: scaleX(-1);
-  animation: drive-oncoming 8s linear 2s infinite;
-  filter: drop-shadow(0 4px 8px rgba(255,0,255,0.4));
-}
-@keyframes drive-oncoming { from{right:-120px} to{right:calc(100% + 20px)} }
-
-/* Lamppost */
-.lamppost {
-  position: absolute;
-  bottom: 140px;
-  width: 8px;
-  z-index: 7;
-  pointer-events: none;
-  animation: lamp-scroll 3s linear infinite;
-}
-@keyframes lamp-scroll {
-  from{transform:translateX(0)} to{transform:translateX(-200vw)}
-}
-
-/* Hero Text */
-.hero-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
-  text-align: center;
-  z-index: 20;
-  pointer-events: none;
-}
-.hero-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(1rem, 3.5vw, 2.2rem);
-  color: var(--neon-green);
-  text-shadow:
-    0 0 10px var(--neon-green),
-    0 0 30px var(--neon-green),
-    3px 3px 0 #003300,
-    -1px -1px 0 #001100;
-  animation: glitch 5s infinite, title-pulse 2s ease-in-out infinite alternate;
-  line-height: 1.5;
-  letter-spacing: 2px;
-}
-@keyframes title-pulse {
-  from { text-shadow: 0 0 10px var(--neon-green), 0 0 30px var(--neon-green), 3px 3px 0 #003300; }
-  to   { text-shadow: 0 0 20px var(--neon-green), 0 0 50px var(--neon-green), 0 0 80px rgba(57,255,20,0.4), 3px 3px 0 #003300; }
-}
-@keyframes glitch {
-  0%,88%,100%{transform:none;filter:none}
-  89%{transform:translate(-3px,1px);filter:hue-rotate(90deg)}
-  90%{transform:translate(3px,-1px);filter:hue-rotate(-90deg)}
-  91%{transform:none;filter:none}
-  92%{transform:translate(2px,2px) skewX(2deg);filter:brightness(1.5)}
-  93%{transform:none;filter:none}
-}
-.hero-sub {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.5rem, 1.5vw, 0.8rem);
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px var(--neon-cyan), 2px 2px 0 #003333;
-  margin-top: 12px;
-  letter-spacing: 3px;
-}
-.hero-tagline {
-  font-family: 'VT323', monospace;
-  font-size: clamp(1rem, 2.5vw, 1.4rem);
-  color: var(--neon-pink);
-  text-shadow: 0 0 8px var(--neon-pink);
-  margin-top: 8px;
-  animation: type-cursor 1s infinite;
-}
-@keyframes type-cursor { 0%,100%{border-right-color:var(--neon-pink)} 50%{border-right-color:transparent} }
-
-.hero-btns {
-  display: flex; gap: 12px; flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 24px;
-  pointer-events: all;
-}
-
-.pixel-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.45rem;
-  padding: 10px 16px;
-  border: 3px solid;
-  background: transparent;
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-a {
+  font-family: var(--font-pixel);
+  font-size: .38rem;
+  color: var(--text-dim);
   text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: all 0.1s;
-  position: relative;
-  cursor: none;
+  padding: 6px 10px;
   letter-spacing: 1px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
 }
-.pixel-btn::before {
+.nav-a:hover, .nav-a.active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+/* ═══════════════════════════════════
+   HERO
+═══════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  padding-top: 48px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 60% 40%, #0d1428 0%, var(--bg) 70%);
+}
+
+/* Star field */
+#star-canvas {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+}
+
+/* Retro sun */
+.retro-sun {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 280px; height: 140px;
+  background: linear-gradient(180deg,
+    rgba(200,80,20,.18) 0%,
+    rgba(232,160,32,.1) 40%,
+    transparent 100%
+  );
+  border-radius: 280px 280px 0 0;
+  z-index: 1;
+}
+.retro-sun::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 12px,
+    rgba(10,12,18,.9) 12px 15px
+  );
+  border-radius: inherit;
+}
+
+/* Grid floor */
+.grid-floor {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(90,180,200,.04) 100%),
+    linear-gradient(90deg, rgba(90,180,200,.06) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(0deg,  rgba(90,180,200,.04) 1px, transparent 1px) 0 0 / 48px 48px;
+  transform: perspective(400px) rotateX(55deg);
+  transform-origin: bottom;
+  z-index: 1;
+  opacity: .6;
+}
+
+/* City silhouette */
+.city-sil {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 180px;
+  z-index: 2; pointer-events: none;
+}
+
+.hero-inner {
+  position: relative; z-index: 10;
+  text-align: center;
+  padding: 24px;
+}
+
+/* CRT monitor frame */
+.crt-frame {
+  display: inline-block;
+  border: 2px solid var(--cyan-dim);
+  box-shadow:
+    0 0 0 1px rgba(90,180,200,.1),
+    0 0 24px rgba(90,180,200,.06),
+    inset 0 0 40px rgba(0,0,0,.4);
+  padding: 36px 48px;
+  background: rgba(10,12,18,.6);
+  backdrop-filter: blur(2px);
+  position: relative;
+  max-width: 580px;
+}
+/* Corner brackets */
+.crt-frame::before, .crt-frame::after {
   content: '';
   position: absolute;
-  top: 3px; left: 3px;
-  width: 100%; height: 100%;
-  background: currentColor;
-  opacity: 0;
-  transition: opacity 0.1s;
-  z-index: -1;
+  width: 18px; height: 18px;
+  border: 2px solid var(--amber);
 }
-.pixel-btn:hover::before { opacity: 0.15; }
-.pixel-btn:hover { transform: translate(-2px, -2px); }
-.pixel-btn:active { transform: translate(1px, 1px); }
+.crt-frame::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.crt-frame::after  { bottom: -2px; right: -2px; border-left: none; border-top: none; }
 
-.btn-cyan { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 3px 3px 0 var(--neon-cyan); }
-.btn-cyan:hover { box-shadow: 5px 5px 0 var(--neon-cyan), 0 0 20px var(--neon-cyan); }
-.btn-pink { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 3px 3px 0 var(--neon-pink); }
-.btn-pink:hover { box-shadow: 5px 5px 0 var(--neon-pink), 0 0 20px var(--neon-pink); }
-.btn-yellow { border-color: var(--neon-yellow); color: var(--neon-yellow); box-shadow: 3px 3px 0 var(--neon-yellow); }
-.btn-yellow:hover { box-shadow: 5px 5px 0 var(--neon-yellow), 0 0 20px var(--neon-yellow); }
+.badge-stage {
+  font-family: var(--font-pixel);
+  font-size: .34rem;
+  color: var(--amber-dim);
+  letter-spacing: 3px;
+  display: block;
+  margin-bottom: 18px;
+  animation: slow-blink 3s infinite;
+}
+@keyframes slow-blink { 0%,100%{opacity:1} 48%{opacity:1} 50%{opacity:.4} 52%{opacity:1} }
+
+.hero-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(.9rem, 3.5vw, 1.6rem);
+  color: var(--green);
+  text-shadow: 0 0 12px rgba(76,175,112,.3), 2px 2px 0 rgba(0,0,0,.8);
+  line-height: 1.8;
+  letter-spacing: 2px;
+  animation: title-glitch 8s infinite;
+}
+@keyframes title-glitch {
+  0%,92%,100%{filter:none;transform:none}
+  93%{filter:hue-rotate(30deg);transform:translate(-2px,0)}
+  94%{filter:none;transform:translate(2px,0)}
+  95%{transform:none}
+}
+
+.hero-sub {
+  font-family: var(--font-mono);
+  font-size: clamp(.7rem,1.5vw,.85rem);
+  color: var(--cyan);
+  letter-spacing: 3px;
+  margin: 12px 0 6px;
+  opacity: .85;
+}
+
+/* XP bar */
+.xp-wrap { margin: 14px 0 10px; text-align: left; }
+.xp-label {
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  color: var(--text-dim);
+  display: flex; justify-content: space-between;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+.xp-track {
+  height: 6px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--road-line);
+  position: relative; overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-dim), var(--green));
+  width: 0;
+  animation: xp-grow 2.5s 0.5s ease-out forwards;
+}
+@keyframes xp-grow { to { width: 78%; } }
+
+.hero-cursor {
+  font-family: var(--font-vt);
+  font-size: 1.3rem;
+  color: var(--text-dim);
+  border-right: 2px solid var(--amber);
+  padding-right: 4px;
+  animation: cursor-blink 1s infinite;
+  display: inline-block;
+}
+@keyframes cursor-blink { 0%,100%{border-color:var(--amber)} 50%{border-color:transparent} }
+
+.hero-chips {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin: 14px 0;
+}
+.chip {
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  padding: 4px 8px;
+  border: 1px solid;
+  letter-spacing: 1px;
+}
+.chip-a { border-color: var(--green-dim); color: var(--green); }
+.chip-b { border-color: var(--cyan-dim);  color: var(--cyan); }
+.chip-c { border-color: var(--amber-dim); color: var(--amber); }
+
+.hero-btns {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  margin-top: 18px;
+}
+.pbtn {
+  font-family: var(--font-pixel);
+  font-size: .38rem;
+  padding: 9px 14px;
+  border: 2px solid;
+  background: transparent;
+  text-decoration: none;
+  cursor: none;
+  letter-spacing: 1px;
+  transition: transform .1s, box-shadow .1s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.pbtn:hover { transform: translate(-2px,-2px); }
+.pbtn-a { border-color: var(--amber); color: var(--amber); box-shadow: 2px 2px 0 var(--amber-dim); }
+.pbtn-a:hover { box-shadow: 4px 4px 0 var(--amber), 0 0 16px rgba(232,160,32,.2); }
+.pbtn-b { border-color: var(--cyan);  color: var(--cyan);  box-shadow: 2px 2px 0 var(--cyan-dim); }
+.pbtn-b:hover { box-shadow: 4px 4px 0 var(--cyan), 0 0 16px rgba(90,180,200,.2); }
+.pbtn-c { border-color: var(--green); color: var(--green); box-shadow: 2px 2px 0 var(--green-dim); }
+.pbtn-c:hover { box-shadow: 4px 4px 0 var(--green), 0 0 16px rgba(76,175,112,.2); }
 
 .scroll-hint {
   position: absolute;
-  bottom: 155px;
-  left: 50%;
+  bottom: 24px; left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.4rem;
-  color: rgba(0,255,255,0.5);
-  animation: bounce-hint 1.5s ease-in-out infinite;
-  pointer-events: none;
-  text-align: center;
+  z-index: 10;
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  color: var(--text-dim);
+  animation: bounce 2s ease-in-out infinite;
+  white-space: nowrap;
 }
-@keyframes bounce-hint { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-5px)} }
 
-/* ── MARQUEE ── */
+/* ═══════════════════════════════════
+   MARQUEE
+═══════════════════════════════════ */
 .marquee-wrap {
   overflow: hidden;
-  background: #050510;
-  border-top: 3px solid var(--neon-cyan);
-  border-bottom: 3px solid var(--neon-cyan);
-  padding: 8px 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--road-line);
+  border-bottom: 1px solid var(--road-line);
+  padding: 7px 0;
   position: relative; z-index: 10;
 }
 .marquee-track {
-  display: flex; gap: 48px;
-  animation: marquee 20s linear infinite;
+  display: flex; gap: 0;
+  animation: scroll-left 22s linear infinite;
   white-space: nowrap;
 }
-@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-.marquee-item {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.45rem;
-  color: var(--neon-cyan);
-  opacity: 0.7;
+@keyframes scroll-left { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.mq-item {
+  font-family: var(--font-pixel);
+  font-size: .36rem;
+  color: var(--text-dim);
+  padding: 0 24px;
   flex-shrink: 0;
   letter-spacing: 1px;
 }
-.marquee-item:nth-child(even) { color: var(--neon-pink); }
+.mq-item:nth-child(3n+1) { color: var(--amber-dim); }
+.mq-item:nth-child(3n+2) { color: var(--cyan-dim); }
+.mq-item:nth-child(3n)   { color: var(--green-dim); }
 
-/* ── SECTIONS ── */
-section { position: relative; z-index: 1; }
-.section-pad { padding: 70px 0; }
-.grid-bg {
-  background:
-    linear-gradient(rgba(0,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,255,0.025) 1px, transparent 1px),
-    var(--sky-night);
-  background-size: 32px 32px;
-}
-
-.pixel-divider {
-  height: 6px;
-  background: repeating-linear-gradient(90deg,
-    var(--neon-cyan) 0 8px, transparent 8px 12px,
-    var(--neon-pink) 12px 20px, transparent 20px 24px,
-    var(--neon-green) 24px 32px, transparent 32px 36px
-  );
-  opacity: 0.6;
-}
-
-/* Section headers */
-.section-header {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(0.7rem, 2vw, 1.1rem);
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 36px;
-  letter-spacing: 2px;
+/* ═══════════════════════════════════
+   SECTIONS
+═══════════════════════════════════ */
+.section {
+  padding: 60px 40px 60px 48px;
   position: relative;
 }
-.section-header::after {
-  content: '';
-  flex: 1;
+.section:nth-child(even) { background: var(--bg2); }
+
+/* section divider dots */
+.sec-divider {
   height: 2px;
-  background: linear-gradient(90deg, currentColor 0%, transparent 100%);
-  margin-left: 12px;
-  margin-top: 2px;
+  background: repeating-linear-gradient(90deg,
+    var(--road-line) 0 6px, transparent 6px 10px);
+  margin: 0;
 }
-.s-cyan  { color: var(--neon-cyan);   text-shadow: 0 0 15px var(--neon-cyan),  2px 2px 0 #003333; }
-.s-green { color: var(--neon-green);  text-shadow: 0 0 15px var(--neon-green), 2px 2px 0 #003300; }
-.s-pink  { color: var(--neon-pink);   text-shadow: 0 0 15px var(--neon-pink),  2px 2px 0 #330033; }
-.s-yellow{ color: var(--neon-yellow); text-shadow: 0 0 15px var(--neon-yellow),2px 2px 0 #333300; }
-.s-orange{ color: var(--neon-orange); text-shadow: 0 0 15px var(--neon-orange),2px 2px 0 #331100; }
 
-/* ── ABOUT CARD ── */
-.about-card {
-  background: #080818;
-  border: 3px solid var(--neon-cyan);
-  box-shadow: 4px 4px 0 var(--neon-cyan), 0 0 20px rgba(0,255,255,0.1), inset 0 0 30px rgba(0,255,255,0.02);
-  padding: 28px;
-  position: relative;
-  transition: box-shadow 0.2s, transform 0.2s;
+.sec-header {
+  font-family: var(--font-pixel);
+  font-size: clamp(.5rem,1.5vw,.75rem);
+  color: var(--amber);
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  display: flex; align-items: center; gap: 12px;
 }
-.about-card:hover { box-shadow: 6px 6px 0 var(--neon-cyan), 0 0 30px rgba(0,255,255,0.2); transform: translate(-2px,-2px); }
-.about-card::before {
-  content: 'PLAYER_1.DAT';
-  font-family: 'Press Start 2P', monospace; font-size: 0.35rem;
-  color: var(--neon-cyan); opacity: 0.2;
-  position: absolute; top: 8px; right: 10px; letter-spacing: 2px;
+.sec-header span { color: var(--text-dim); font-size: .85em; }
+.sec-header::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--amber-dim) 0%, transparent 100%);
+  opacity: .5;
 }
-.about-card p { font-family: 'VT323', monospace; font-size: 1.25rem; line-height: 1.9; color: #c0c0e0; }
-.about-card strong { color: var(--neon-cyan); }
 
-/* Stats */
-.stat-box {
-  border: 3px solid;
+/* ── ABOUT ── */
+.about-grid { display: grid; grid-template-columns: 1fr 220px; gap: 24px; align-items: start; }
+@media(max-width:680px){ .about-grid { grid-template-columns: 1fr; } }
+
+.about-text-card {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  border-left: 3px solid var(--cyan-dim);
+  padding: 24px;
+  font-family: var(--font-vt);
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: #a0a8c0;
+}
+.about-text-card strong { color: var(--cyan); }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
   padding: 14px 10px;
   text-align: center;
   position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
-  background: #060616;
+  overflow: hidden;
 }
-.stat-box:hover { transform: translate(-2px,-2px); }
-.stat-box::after {
+.stat-card::before {
   content: '';
-  position: absolute;
-  bottom: -3px; right: -3px;
-  width: 100%; height: 100%;
-  background: currentColor;
-  z-index: -1;
-  opacity: 0.12;
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent-color, var(--amber));
+  opacity: .6;
 }
-.stat-num {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(1rem, 3vw, 1.6rem);
+.stat-n {
+  font-family: var(--font-pixel);
+  font-size: clamp(.85rem,2.5vw,1.2rem);
+  color: var(--accent-color, var(--amber));
   display: block;
 }
-.stat-label { font-family: 'VT323', monospace; font-size: 0.9rem; opacity: 0.75; margin-top: 4px; display: block; }
-.s1 { border-color:var(--neon-cyan); color:var(--neon-cyan); box-shadow: 3px 3px 0 var(--neon-cyan); }
-.s2 { border-color:var(--neon-green); color:var(--neon-green); box-shadow: 3px 3px 0 var(--neon-green); }
-.s3 { border-color:var(--neon-pink); color:var(--neon-pink); box-shadow: 3px 3px 0 var(--neon-pink); }
-.s4 { border-color:var(--neon-yellow); color:var(--neon-yellow); box-shadow: 3px 3px 0 var(--neon-yellow); }
+.stat-l {
+  font-family: var(--font-vt);
+  font-size: .85rem;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 3px;
+}
 
-/* ── SKILL TREE ── */
-.skill-panel {
-  background: #06060f;
-  border: 3px solid var(--neon-green);
-  box-shadow: 4px 4px 0 var(--neon-green);
-  padding: 20px;
-  margin-bottom: 0;
-  transition: transform 0.2s, box-shadow 0.2s;
+/* ── SKILLS ── */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.skill-card {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  padding: 18px;
+  transition: border-color .2s, transform .15s;
 }
-.skill-panel:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--neon-green); }
-.skill-panel h6 {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.5rem;
-  color: var(--neon-green);
+.skill-card:hover { border-color: var(--amber-dim); transform: translateY(-2px); }
+.skill-card h6 {
+  font-family: var(--font-pixel);
+  font-size: .38rem;
+  color: var(--amber);
   margin-bottom: 14px;
-  letter-spacing: 1px;
-  border-bottom: 1px solid rgba(57,255,20,0.2);
   padding-bottom: 8px;
+  border-bottom: 1px solid var(--road-line);
+  letter-spacing: 1px;
 }
-.skill-tag {
+.tag {
   display: inline-block;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.38rem;
-  padding: 5px 9px;
-  border: 2px solid;
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  padding: 4px 7px;
+  border: 1px solid;
   margin: 3px;
+  letter-spacing: 1px;
   cursor: none;
-  transition: all 0.1s;
-  position: relative;
+  transition: opacity .15s;
 }
-.skill-tag::after { content:''; position:absolute; bottom:-2px; right:-2px; width:100%; height:100%; background:currentColor; z-index:-1; opacity:0; transition:opacity .1s; }
-.skill-tag:hover::after { opacity:0.15; }
-.skill-tag:hover { transform:translate(-1px,-1px); }
-.t-c { border-color:var(--neon-cyan); color:var(--neon-cyan); }
-.t-g { border-color:var(--neon-green); color:var(--neon-green); }
-.t-p { border-color:var(--neon-pink); color:var(--neon-pink); }
-.t-y { border-color:var(--neon-yellow); color:var(--neon-yellow); }
-.t-o { border-color:var(--neon-orange); color:var(--neon-orange); }
+.tag:hover { opacity: .7; }
+.tag-c { border-color: var(--cyan-dim);  color: var(--cyan); }
+.tag-g { border-color: var(--green-dim); color: var(--green); }
+.tag-a { border-color: var(--amber-dim); color: var(--amber); }
 
 /* ── EXPERIENCE ── */
-.exp-timeline { position: relative; padding-left: 8px; }
-.exp-timeline::before {
-  content: '';
-  position: absolute; left: 24px; top: 0; bottom: 0;
-  width: 3px;
-  background: repeating-linear-gradient(180deg, var(--neon-cyan) 0 8px, transparent 8px 16px);
+.exp-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0 20px;
+  margin-bottom: 32px;
+  align-items: start;
 }
-.exp-item { padding-left: 64px; margin-bottom: 36px; position: relative; }
-.exp-dot {
-  position: absolute; left: 14px; top: 14px;
-  width: 22px; height: 22px;
-  background: #050510;
-  border: 3px solid var(--neon-cyan);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.55rem; font-family: 'Press Start 2P', monospace;
-  color: var(--neon-cyan);
-  animation: dot-pulse 2s ease-in-out infinite;
-}
-@keyframes dot-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,255,0.5)} 50%{box-shadow:0 0 0 8px rgba(0,255,255,0)} }
-.exp-card {
-  background: #080818;
-  border: 3px solid var(--neon-cyan);
-  box-shadow: 4px 4px 0 rgba(0,255,255,0.3);
-  padding: 20px 22px;
+@media(max-width:560px){ .exp-item { grid-template-columns: 1fr; } }
+
+.exp-date-col {
+  text-align: right;
+  padding-top: 4px;
+  padding-right: 20px;
+  border-right: 2px solid var(--road-line);
   position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
-.exp-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(0,255,255,0.4); }
-.exp-card::before { content:''; position:absolute; left:0; top:0; width:5px; height:100%; background:linear-gradient(180deg,var(--neon-cyan),var(--neon-pink)); }
-.exp-org { font-family:'Press Start 2P', monospace; font-size:0.5rem; color:var(--neon-yellow); text-shadow:1px 1px 0 #333300; letter-spacing:1px; }
-.exp-role { font-family:'Orbitron', sans-serif; font-size:0.9rem; font-weight:700; margin:6px 0 4px; }
-.exp-date { font-family:'Press Start 2P', monospace; font-size:0.4rem; margin-bottom:12px; }
-.exp-date.active { color:var(--neon-green); }
-.exp-date.active::before { content:'▶ '; animation:blink 1s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.exp-card ul { list-style: none; padding: 0; }
-.exp-card li { font-family:'VT323', monospace; font-size:1.2rem; color:#b0b0cc; padding:3px 0 3px 22px; position:relative; line-height:1.5; }
-.exp-card li::before { content:'►'; color:var(--neon-cyan); font-size:0.65rem; position:absolute; left:0; top:5px; }
+.exp-date-col::after {
+  content: '';
+  position: absolute;
+  right: -6px; top: 8px;
+  width: 10px; height: 10px;
+  background: var(--amber);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+}
+.exp-date-col.active::after { background: var(--green); animation: dot-pulse 2s infinite; }
+@keyframes dot-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(76,175,112,.5)} 50%{box-shadow:0 0 0 6px rgba(76,175,112,0)} }
 
-/* ── REPOS ── */
-.repo-card {
-  background: #080818;
-  border: 3px solid var(--neon-pink);
-  box-shadow: 4px 4px 0 rgba(255,0,255,0.3);
-  padding: 20px;
-  height: 100%;
-  text-decoration: none;
-  display: block; color: inherit;
-  transition: all 0.15s;
-  position: relative; overflow: hidden;
+.exp-dates {
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  color: var(--text-dim);
+  line-height: 2;
+  letter-spacing: 1px;
 }
-.repo-card:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 rgba(255,0,255,0.4), 0 0 20px rgba(255,0,255,0.1); color: inherit; border-color: var(--neon-cyan); }
-.repo-corner { position:absolute; top:0; right:0; width:0; height:0; border-style:solid; border-width:0 24px 24px 0; border-color:transparent var(--neon-pink) transparent transparent; transition: border-color .15s; }
-.repo-card:hover .repo-corner { border-color: transparent var(--neon-cyan) transparent transparent; }
-.repo-name { font-family:'Press Start 2P', monospace; font-size:0.5rem; color:var(--neon-pink); margin-bottom:10px; line-height:1.7; }
-.repo-card:hover .repo-name { color: var(--neon-cyan); }
-.repo-desc { font-family:'VT323', monospace; font-size:1.1rem; color:#8888aa; margin-bottom:14px; line-height:1.5; }
-.repo-lang { font-family:'Press Start 2P', monospace; font-size:0.38rem; padding:4px 8px; border:2px solid; display:inline-flex; align-items:center; gap:4px; }
-.repo-stars { font-family:'Press Start 2P', monospace; font-size:0.38rem; color:var(--neon-yellow); margin-left:8px; }
-.repo-loading { font-family:'Press Start 2P', monospace; font-size:0.55rem; color:var(--neon-pink); text-align:center; padding:40px; animation:blink 1s infinite; }
+.exp-dates.live { color: var(--green); }
 
-/* ── EDUCATION ── */
-.edu-card {
-  background: #08080f;
-  border: 3px solid var(--neon-yellow);
-  box-shadow: 4px 4px 0 rgba(255,255,0,0.3);
-  padding: 24px;
-  transition: all 0.15s;
-  position: relative; overflow: hidden;
+.exp-body {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  border-left: 3px solid var(--amber-dim);
+  padding: 18px 20px;
+  margin-left: 20px;
 }
-.edu-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(255,255,0,0.4); }
-.edu-card::after { content:'🎓'; position:absolute; right:16px; top:16px; font-size:1.5rem; opacity:0.15; }
-.edu-degree { font-family:'Press Start 2P', monospace; font-size:0.55rem; color:var(--neon-yellow); margin-bottom:10px; line-height:1.8; text-shadow:2px 2px 0 #333300; }
-.edu-school { font-family:'Orbitron', sans-serif; font-size:0.95rem; color:var(--neon-cyan); font-weight:700; }
-.edu-loc { font-family:'VT323', monospace; font-size:1.1rem; color:#888; margin-top:4px; }
-.edu-year { font-family:'VT323', monospace; font-size:1.3rem; color:var(--neon-green); margin-top:8px; }
+@media(max-width:560px){ .exp-date-col { text-align:left; border-right:none; border-left:2px solid var(--road-line); padding-left:20px; padding-right:0; } .exp-date-col::after { left:-6px; right:auto; } .exp-body { margin-left:0; } }
+
+.exp-org {
+  font-family: var(--font-pixel);
+  font-size: .38rem;
+  color: var(--amber);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.exp-role {
+  font-family: var(--font-mono);
+  font-size: .9rem;
+  color: var(--cyan);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.exp-body ul { list-style: none; padding: 0; }
+.exp-body li {
+  font-family: var(--font-vt);
+  font-size: 1.15rem;
+  color: #8890b0;
+  padding: 2px 0 2px 18px;
+  position: relative;
+  line-height: 1.6;
+}
+.exp-body li::before { content: '▸'; color: var(--amber-dim); position: absolute; left: 0; top: 3px; font-size: .7rem; }
 
 /* ── PUBLICATION ── */
 .pub-card {
-  background: #080810;
-  border: 3px solid var(--neon-orange);
-  box-shadow: 4px 4px 0 rgba(255,102,0,0.3);
-  padding: 24px;
-  transition: all 0.15s;
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  border-left: 3px solid var(--pink);
+  padding: 22px;
+  margin-top: 28px;
 }
-.pub-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(255,102,0,0.4); }
-.pub-card h6 { font-family:'Press Start 2P', monospace; font-size:0.5rem; color:var(--neon-orange); margin-bottom:14px; letter-spacing:1px; line-height:1.9; }
-.pub-card p { font-family:'VT323', monospace; font-size:1.2rem; color:#b0a090; line-height:1.7; }
-.pub-card a { color:var(--neon-cyan); text-decoration:none; }
-.pub-card a:hover { color:var(--neon-green); text-shadow:0 0 8px var(--neon-green); }
+.pub-card h6 {
+  font-family: var(--font-pixel);
+  font-size: .4rem;
+  color: var(--pink);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.pub-card p {
+  font-family: var(--font-vt);
+  font-size: 1.15rem;
+  color: #9090b0;
+  line-height: 1.8;
+}
+.pub-card a { color: var(--cyan); text-decoration: none; }
+.pub-card a:hover { text-decoration: underline; }
 
-/* ── GAME OVER ── */
+/* ── REPOS ── */
+.repos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.repo-card {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  padding: 18px;
+  text-decoration: none; color: inherit;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  transition: border-color .15s, transform .15s;
+  position: relative; overflow: hidden;
+}
+.repo-card:hover { border-color: var(--cyan-dim); transform: translateY(-2px); color: inherit; }
+.repo-name {
+  font-family: var(--font-pixel);
+  font-size: .38rem;
+  color: var(--cyan);
+  line-height: 1.8;
+}
+.repo-desc { font-family: var(--font-vt); font-size: 1.05rem; color: var(--text-dim); flex: 1; line-height: 1.5; }
+.repo-meta { display: flex; gap: 10px; align-items: center; }
+.repo-lang {
+  font-family: var(--font-pixel);
+  font-size: .3rem;
+  padding: 3px 7px;
+  border: 1px solid var(--road-line);
+  color: var(--text-dim);
+}
+.repo-stars { font-family: var(--font-pixel); font-size: .32rem; color: var(--amber-dim); }
+.repo-load { font-family: var(--font-pixel); font-size: .4rem; color: var(--text-dim); padding: 40px; text-align: center; animation: slow-blink 1.5s infinite; }
+
+/* ── EDUCATION ── */
+.edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.edu-card {
+  background: var(--bg3);
+  border: 1px solid var(--road-line);
+  border-top: 2px solid var(--amber-dim);
+  padding: 22px;
+  transition: transform .15s;
+}
+.edu-card:hover { transform: translateY(-2px); }
+.edu-deg { font-family: var(--font-pixel); font-size: .4rem; color: var(--amber); line-height: 2; margin-bottom: 10px; }
+.edu-sch { font-family: var(--font-mono); font-size: .85rem; color: var(--cyan); }
+.edu-loc { font-family: var(--font-vt); font-size: 1rem; color: var(--text-dim); margin-top: 2px; }
+.edu-yr  { font-family: var(--font-vt); font-size: 1.1rem; color: var(--green); margin-top: 8px; }
+
+/* ── FOOTER / GAME OVER ── */
 #game-over {
-  min-height: 65vh;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(180deg, #050510 0%, #0a0520 100%);
-  overflow: hidden;
-  position: relative;
+  padding: 60px 40px;
   text-align: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
 }
-#matrix-canvas { position:absolute; inset:0; opacity:0.12; pointer-events:none; z-index:0; }
-.game-over-content { position:relative; z-index:2; padding:40px 20px; }
-.game-over-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(1rem, 5vw, 2.5rem);
-  animation: rainbow 3s linear infinite, glitch 5s infinite;
-  letter-spacing: 2px;
-  line-height: 1.5;
+#matrix-canvas { position: absolute; inset: 0; opacity: .06; pointer-events: none; }
+.go-inner { position: relative; z-index: 2; }
+.go-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(.9rem,4vw,2rem);
+  animation: rainbow-muted 4s linear infinite, title-glitch 8s infinite;
+  letter-spacing: 2px; margin-bottom: 20px; line-height: 1.7;
 }
-@keyframes rainbow {
-  0%{color:#ff0000} 16%{color:#ff6600} 33%{color:#ffff00}
-  50%{color:#39ff14} 66%{color:#00ffff} 83%{color:#ff00ff} 100%{color:#ff0000}
+@keyframes rainbow-muted {
+  0%  { color: #c06040 }
+  25% { color: var(--amber) }
+  50% { color: var(--green) }
+  75% { color: var(--cyan) }
+  100%{ color: #c06040 }
 }
-.score-line { font-family:'Press Start 2P', monospace; font-size:0.55rem; color:var(--neon-cyan); margin:6px 0; letter-spacing:2px; }
-.insert-coin { font-family:'Press Start 2P', monospace; font-size:0.6rem; color:var(--neon-yellow); animation:blink 1s infinite; margin-top:20px; text-shadow:0 0 15px var(--neon-yellow); }
+.score-line { font-family: var(--font-pixel); font-size: .38rem; color: var(--text-dim); margin: 5px 0; letter-spacing: 1px; }
+.insert-coin { font-family: var(--font-pixel); font-size: .45rem; color: var(--amber); animation: slow-blink 1.2s infinite; margin-top: 22px; }
+.footer-copy { font-family: var(--font-pixel); font-size: .28rem; color: rgba(104,112,160,.25); margin-top: 30px; letter-spacing: 2px; }
 
-/* ── SCROLL ANIMATIONS ── */
-.fade-up { opacity:0; transform:translateY(28px); transition:opacity .6s ease, transform .6s ease; }
-.fade-up.visible { opacity:1; transform:translateY(0); }
+/* ── FADE IN ── */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.fade-in.vis { opacity: 1; transform: none; }
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #050510; }
-::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
-::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+/* ═══════════════════════════════════
+   ROAD RAIL — Cars (top-view pixel art)
+═══════════════════════════════════ */
+.road-car {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  image-rendering: pixelated;
+}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .hero-title { font-size: 1rem; }
-  .exp-timeline::before { display:none; }
-  .exp-item { padding-left: 0; }
-  .exp-dot { display:none; }
-  .city-far, .city-mid, .city-near { display:none; }
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+@media(max-width: 600px) {
+  :root { --road-w: 0px; }
+  .road-rail { display: none; }
+  .content { margin-left: 0; }
+  .nav { left: 0; padding: 0 12px; }
+  .section { padding: 48px 20px; }
+  .hero-inner { padding: 12px; }
+  .crt-frame { padding: 24px 20px; }
+}
+@media(max-width: 900px) {
+  .section { padding: 48px 24px 48px 32px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Cursor -->
-<div id="cursor"></div>
-<div id="cursor-trail"></div>
+<div id="cur"></div>
 
-<!-- NAV -->
-<nav class="pixel-nav">
-  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
-    <span class="nav-brand">APS<span style="color:var(--neon-pink)">.</span>EXE</span>
-    <div class="d-flex gap-1 flex-wrap">
-      <a href="#about"     class="nav-link-pixel" data-label="STATS">ABOUT</a>
-      <a href="#skills"    class="nav-link-pixel" data-label="ABILITIES">SKILLS</a>
-      <a href="#experience"class="nav-link-pixel" data-label="QUESTS">EXP</a>
-      <a href="#repos"     class="nav-link-pixel" data-label="INVENTORY">REPOS</a>
-      <a href="#education" class="nav-link-pixel" data-label="LORE">EDU</a>
-      <a href="#game-over" class="nav-link-pixel" data-label="FINAL">END</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ══ HERO ══ -->
-<section id="hero">
-  <canvas id="star-field"></canvas>
-
-  <!-- Moon -->
-  <div class="pixel-moon"></div>
-
-  <!-- Far buildings -->
-  <div class="city-far" id="city-far"></div>
-
-  <!-- Mid buildings -->
-  <div class="city-mid" id="city-mid"></div>
-
-  <!-- Near buildings -->
-  <div class="city-near" id="city-near"></div>
-
-  <!-- Road -->
-  <div class="road">
-    <div class="road-line road-line-left" style="position:absolute;top:20%;height:3px;"></div>
-    <div class="road-line" style="position:absolute;top:50%;height:4px;"></div>
-    <div class="road-line road-line-right" style="position:absolute;top:75%;height:3px;"></div>
-    <div class="sidewalk" style="bottom:0;"></div>
-  </div>
-
-  <!-- Lampposts -->
-  <div id="lampposts"></div>
-
-  <!-- Cars -->
-  <div class="car-container" id="car-main"></div>
-  <div class="car-bg car-bg-1" id="car-bg1"></div>
-  <div class="car-bg car-bg-2" id="car-bg2"></div>
-  <div class="car-oncoming" id="car-oncoming"></div>
-
-  <!-- Hero content -->
-  <div class="hero-content">
-    <div style="font-family:'Press Start 2P';font-size:0.45rem;color:rgba(57,255,20,0.6);margin-bottom:10px;letter-spacing:3px;animation:blink 2s infinite">
-      ▶ STAGE 01 — INSERT COIN
-    </div>
-    <h1 class="hero-title">AROMAL P SHAJI</h1>
-    <div class="hero-sub">FULL STACK DEVELOPER · ML INTEGRATION</div>
-    <div class="hero-tagline" style="border-right:3px solid var(--neon-pink)">
-      &gt; BUILDING SYSTEMS THAT SCALE_
-    </div>
-    <div class="hero-btns">
-      <a href="mailto:aromalpshaji10@gmail.com" class="pixel-btn btn-yellow">✉ EMAIL</a>
-      <a href="https://linkedin.com/in/aromalpshaji" target="_blank" class="pixel-btn btn-pink">▣ LINKEDIN</a>
-      <a href="https://github.com/AromalShaji" target="_blank" class="pixel-btn btn-cyan">◈ GITHUB</a>
-    </div>
-  </div>
-
-  <!-- Scroll hint -->
-  <div class="scroll-hint">▼ SCROLL TO CONTINUE ▼</div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="marquee-track"></div>
+<!-- ══ ROAD RAIL ══ -->
+<div class="road-rail" id="road-rail">
+  <svg id="road-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  <!-- Cars injected by JS -->
 </div>
 
-<!-- ══ ABOUT ══ -->
-<section id="about" class="section-pad grid-bg">
-  <div class="container">
-    <div class="section-header s-cyan fade-up">
-      <span>🖥</span> PLAYER STATS
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+  <div class="content">
+
+    <!-- NAV -->
+    <nav class="nav">
+      <span class="nav-brand">APS<span style="color:var(--cyan)">.</span>EXE</span>
+      <div class="nav-links">
+        <a href="#about"      class="nav-a">ABOUT</a>
+        <a href="#skills"     class="nav-a">SKILLS</a>
+        <a href="#experience" class="nav-a">EXP</a>
+        <a href="#repos"      class="nav-a">REPOS</a>
+        <a href="#education"  class="nav-a">EDU</a>
+        <a href="#game-over"  class="nav-a">END</a>
+      </div>
+    </nav>
+
+    <!-- ══ HERO ══ -->
+    <section id="hero">
+      <canvas id="star-canvas"></canvas>
+      <div class="retro-sun"></div>
+      <div class="grid-floor"></div>
+      <canvas class="city-sil" id="city-canvas"></canvas>
+
+      <div class="hero-inner">
+        <div class="crt-frame">
+          <span class="badge-stage">▶ STAGE_01 · INSERT COIN</span>
+          <h1 class="hero-title">AROMAL<br>P SHAJI</h1>
+          <div class="hero-chips">
+            <span class="chip chip-a">● ONLINE</span>
+            <span class="chip chip-b">LVL 99 DEV</span>
+            <span class="chip chip-c">KERALA.IN</span>
+          </div>
+          <div class="hero-sub">FULL STACK · ML INTEGRATION</div>
+          <div class="xp-wrap">
+            <div class="xp-label"><span>EXP ▓▓▓▓▓▓▓▒░░</span><span>78/100</span></div>
+            <div class="xp-track"><div class="xp-fill"></div></div>
+          </div>
+          <div class="hero-cursor">&gt; BUILDING SYSTEMS THAT SCALE_</div>
+          <div class="hero-btns">
+            <a href="mailto:aromalpshaji10@gmail.com"       class="pbtn pbtn-a">✉ EMAIL</a>
+            <a href="https://linkedin.com/in/aromalpshaji"  target="_blank" class="pbtn pbtn-b">▣ LINKEDIN</a>
+            <a href="https://github.com/AromalShaji"        target="_blank" class="pbtn pbtn-c">◈ GITHUB</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">▼ SCROLL TO CONTINUE ▼</div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+      <div class="marquee-track" id="mq-track"></div>
     </div>
-    <div class="row g-4 mb-5">
-      <div class="col-md-8 fade-up">
-        <div class="about-card">
-          <p>
-            Full-Stack Developer with <strong>2+ years</strong> crafting scalable Laravel-based systems at Mahatma Gandhi University.
-            I architect backend platforms that process <strong>140,000+ examination scripts per cycle</strong> with
-            8,000+ concurrent evaluators and <strong>99% system uptime</strong>.<br><br>
-            My ML-driven OCR pipelines achieve <strong>95%+ handwritten mark extraction accuracy</strong>,
-            eliminating <strong>500+ hours</strong> of manual work per exam cycle. I specialize in workflow automation,
-            RBAC security, RESTful API design, and building resilient examination platforms trusted by thousands.<br><br>
-            Also a published researcher in <strong>Springer</strong> on automated examination systems in Indian higher education.
-          </p>
+
+    <!-- ══ ABOUT ══ -->
+    <section id="about" class="section fade-in">
+      <div class="sec-header"><span>🖥</span> PLAYER STATS</div>
+      <div class="about-grid">
+        <div class="about-text-card">
+          Full-Stack Developer with <strong>2+ years</strong> crafting scalable Laravel systems at Mahatma Gandhi University.
+          I architect backend platforms processing <strong>140,000+ exam scripts per cycle</strong> with
+          8,000+ concurrent evaluators and <strong>99% uptime</strong>.<br><br>
+          My ML-driven OCR pipelines hit <strong>95%+ accuracy</strong> on handwritten marks,
+          eliminating <strong>500+ hours</strong> of manual work per cycle.
+          I specialize in workflow automation, RBAC security, and resilient API design.<br><br>
+          Also published in <strong>Springer</strong> on automated examination systems.
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card" style="--accent-color:var(--cyan)">
+            <span class="stat-n"><span data-count="140">0</span>K+</span>
+            <span class="stat-l">RECORDS/CYCLE</span>
+          </div>
+          <div class="stat-card" style="--accent-color:var(--green)">
+            <span class="stat-n"><span data-count="8">0</span>K+</span>
+            <span class="stat-l">EVALUATORS</span>
+          </div>
+          <div class="stat-card" style="--accent-color:var(--amber)">
+            <span class="stat-n"><span data-count="99">0</span>%</span>
+            <span class="stat-l">UPTIME</span>
+          </div>
+          <div class="stat-card" style="--accent-color:var(--pink)">
+            <span class="stat-n"><span data-count="500">0</span>+</span>
+            <span class="stat-l">HRS SAVED</span>
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="row g-3">
-          <div class="col-6 fade-up"><div class="stat-box s1"><span class="stat-num" data-target="140">0</span><small style="font-family:'Press Start 2P';font-size:.45rem">K+</small><span class="stat-label">RECORDS/CYCLE</span></div></div>
-          <div class="col-6 fade-up"><div class="stat-box s2"><span class="stat-num" data-target="8">0</span><small style="font-family:'Press Start 2P';font-size:.45rem">K+</small><span class="stat-label">EVALUATORS</span></div></div>
-          <div class="col-6 fade-up"><div class="stat-box s3"><span class="stat-num" data-target="99">0</span><small style="font-family:'Press Start 2P';font-size:.45rem">%</small><span class="stat-label">UPTIME</span></div></div>
-          <div class="col-6 fade-up"><div class="stat-box s4"><span class="stat-num" data-target="500">0</span><small style="font-family:'Press Start 2P';font-size:.45rem">+</small><span class="stat-label">HRS SAVED</span></div></div>
+    </section>
+
+    <div class="sec-divider"></div>
+
+    <!-- ══ SKILLS ══ -->
+    <section id="skills" class="section fade-in">
+      <div class="sec-header"><span>⚔</span> SKILL TREE</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h6>LANGUAGES & FRAMEWORKS</h6>
+          <span class="tag tag-c">PHP</span><span class="tag tag-c">Laravel</span><span class="tag tag-c">CodeIgniter</span>
+          <span class="tag tag-g">Python</span><span class="tag tag-g">Django</span><span class="tag tag-g">Flask</span>
+          <span class="tag tag-a">JavaScript</span><span class="tag tag-a">React</span>
+        </div>
+        <div class="skill-card">
+          <h6>BACKEND & DATABASE</h6>
+          <span class="tag tag-c">RESTful API</span><span class="tag tag-c">System Design</span><span class="tag tag-c">RBAC</span>
+          <span class="tag tag-a">MySQL</span><span class="tag tag-a">MongoDB</span><span class="tag tag-a">Redis</span><span class="tag tag-a">SQLite</span>
+          <span class="tag tag-g">Workflow Auto</span>
+        </div>
+        <div class="skill-card">
+          <h6>ML & TOOLS</h6>
+          <span class="tag tag-g">Tesseract OCR</span><span class="tag tag-g">ML Pipelines</span><span class="tag tag-g">Image Processing</span>
+          <span class="tag tag-a">Git</span><span class="tag tag-a">Linux</span><span class="tag tag-a">Postman</span>
+          <span class="tag tag-c">API Testing</span>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<div class="pixel-divider"></div>
+    <div class="sec-divider"></div>
 
-<!-- ══ SKILLS ══ -->
-<section id="skills" class="section-pad">
-  <div class="container">
-    <div class="section-header s-green fade-up"><span>⚔</span> SKILL TREE</div>
-    <div class="row g-3">
-      <div class="col-md-4 fade-up">
-        <div class="skill-panel">
-          <h6>⚡ LANGUAGES & FRAMEWORKS</h6>
-          <span class="skill-tag t-c">PHP</span><span class="skill-tag t-c">Laravel</span><span class="skill-tag t-c">CodeIgniter</span>
-          <span class="skill-tag t-g">Python</span><span class="skill-tag t-g">Django</span><span class="skill-tag t-g">Flask</span>
-          <span class="skill-tag t-y">JavaScript</span><span class="skill-tag t-y">React</span>
+    <!-- ══ EXPERIENCE ══ -->
+    <section id="experience" class="section fade-in">
+      <div class="sec-header"><span>🎮</span> QUEST LOG</div>
+
+      <div class="exp-item fade-in">
+        <div class="exp-date-col active">
+          <div class="exp-dates live">APR 2025<br>PRESENT</div>
         </div>
-      </div>
-      <div class="col-md-4 fade-up">
-        <div class="skill-panel" style="border-color:var(--neon-pink);box-shadow:4px 4px 0 var(--neon-pink)">
-          <h6 style="color:var(--neon-pink);border-color:rgba(255,0,255,0.2)">💾 BACKEND & DATABASE</h6>
-          <span class="skill-tag t-p">RESTful API</span><span class="skill-tag t-p">System Design</span><span class="skill-tag t-p">RBAC</span>
-          <span class="skill-tag t-o">MySQL</span><span class="skill-tag t-o">MongoDB</span><span class="skill-tag t-o">Redis</span><span class="skill-tag t-o">SQLite</span>
-          <span class="skill-tag t-c">Workflow Auto</span>
-        </div>
-      </div>
-      <div class="col-md-4 fade-up">
-        <div class="skill-panel" style="border-color:var(--neon-yellow);box-shadow:4px 4px 0 var(--neon-yellow)">
-          <h6 style="color:var(--neon-yellow);border-color:rgba(255,255,0,0.2)">🤖 ML & TOOLS</h6>
-          <span class="skill-tag t-g">Tesseract OCR</span><span class="skill-tag t-g">ML Pipelines</span><span class="skill-tag t-g">Image Preprocessing</span>
-          <span class="skill-tag t-y">Git</span><span class="skill-tag t-y">Linux</span><span class="skill-tag t-y">Postman</span>
-          <span class="skill-tag t-c">API Testing</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="pixel-divider"></div>
-
-<!-- ══ EXPERIENCE ══ -->
-<section id="experience" class="section-pad grid-bg">
-  <div class="container">
-    <div class="section-header s-pink fade-up"><span>🎮</span> QUEST LOG — EXPERIENCE</div>
-    <div class="exp-timeline">
-
-      <div class="exp-item fade-up">
-        <div class="exp-dot">★</div>
-        <div class="exp-card">
-          <div class="exp-org">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
-          <div class="exp-role" style="color:var(--neon-cyan)">Senior Software Developer</div>
-          <div class="exp-date active">APR 2025 — PRESENT</div>
+        <div class="exp-body">
+          <div class="exp-org">MAHATMA GANDHI UNIVERSITY</div>
+          <div class="exp-role">Senior Software Developer</div>
           <ul>
-            <li>Architected Laravel-based exam valuation platform supporting 8,000+ concurrent evaluators</li>
-            <li>Scaled backend to process 140,000+ exam scripts per cycle with 99% reliability</li>
-            <li>Designed RBAC workflows across valuation, scrutiny, revaluation & results for 100% controlled access</li>
-            <li>Integrated ML-driven OCR pipelines achieving 95%+ handwritten mark extraction accuracy</li>
-            <li>Eliminated 95% manual data entry, saving 500+ operational hours per cycle</li>
-            <li>Optimized evaluator allocation algorithms — 40-50% reduction in result processing time</li>
+            <li>Architected Laravel exam valuation platform — 8,000+ concurrent evaluators</li>
+            <li>Scaled backend: 140,000+ scripts/cycle, 99% reliability</li>
+            <li>RBAC workflows across valuation, scrutiny, revaluation & results</li>
+            <li>ML-driven OCR pipelines: 95%+ handwritten mark accuracy</li>
+            <li>Eliminated 95% manual data entry — 500+ hrs saved/cycle</li>
+            <li>Optimized evaluator allocation — 40-50% faster result processing</li>
           </ul>
         </div>
       </div>
 
-      <div class="exp-item fade-up">
-        <div class="exp-dot" style="border-color:var(--neon-green);color:var(--neon-green)">◆</div>
-        <div class="exp-card" style="border-color:var(--neon-green);box-shadow:4px 4px 0 rgba(57,255,20,0.3)">
-          <div class="exp-card" style="border:none;box-shadow:none;padding:0;background:transparent">
-            <div class="exp-org" style="color:var(--neon-green)">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
-            <div class="exp-role" style="color:var(--neon-green)">Junior Research Fellow</div>
-            <div class="exp-date" style="color:rgba(57,255,20,.7)">AUG 2024 — MAR 2025</div>
-            <ul>
-              <li>Led research & automation for exam platforms serving 10,000+ students per cycle</li>
-              <li>Designed 4+ automation strategies improving scalability & reducing manual intervention</li>
-              <li>Engineered 5+ modern exam workflows across core academic operations</li>
-              <li>Eliminated 3+ legacy manual processes via automated backend solutions</li>
-              <li>Collaborated with 50+ faculty & administrators to refine grading logic</li>
-              <li>Executed 100+ end-to-end test scenarios; managed 10+ production deployments</li>
-            </ul>
-          </div>
+      <div class="exp-item fade-in">
+        <div class="exp-date-col">
+          <div class="exp-dates">AUG 2024<br>MAR 2025</div>
+        </div>
+        <div class="exp-body" style="border-left-color:var(--green-dim)">
+          <div class="exp-org" style="color:var(--green)">MAHATMA GANDHI UNIVERSITY</div>
+          <div class="exp-role" style="color:var(--green)">Junior Research Fellow</div>
+          <ul>
+            <li>Led research & automation for exam platforms — 10,000+ students/cycle</li>
+            <li>Designed 4+ automation strategies improving scalability</li>
+            <li>Engineered 5+ modern exam workflows across academic ops</li>
+            <li>Collaborated with 50+ faculty to refine grading logic</li>
+            <li>100+ end-to-end test scenarios; 10+ production deployments</li>
+          </ul>
         </div>
       </div>
 
-      <div class="exp-item fade-up">
-        <div class="exp-dot" style="border-color:var(--neon-yellow);color:var(--neon-yellow)">▲</div>
-        <div class="exp-card" style="border-color:var(--neon-yellow);box-shadow:4px 4px 0 rgba(255,255,0,0.3)">
-          <div class="exp-card" style="border:none;box-shadow:none;padding:0;background:transparent">
-            <div class="exp-org" style="color:var(--neon-yellow)">MAHATMA GANDHI UNIVERSITY — KERALA, INDIA</div>
-            <div class="exp-role" style="color:var(--neon-yellow)">Project Assistant</div>
-            <div class="exp-date" style="color:rgba(255,255,0,.7)">JAN 2024 — JUL 2024</div>
-            <ul>
-              <li>Analyzed 5+ legacy workflows across 10+ departments — 60%+ efficiency gains in pilots</li>
-              <li>Authored technical specs for 3 enterprise modules with 45+ API endpoints</li>
-              <li>Executed QA across 8 modules, identifying 35+ critical defects — bug rate below 0.1%</li>
-            </ul>
-          </div>
+      <div class="exp-item fade-in">
+        <div class="exp-date-col">
+          <div class="exp-dates">JAN 2024<br>JUL 2024</div>
+        </div>
+        <div class="exp-body" style="border-left-color:var(--cyan-dim)">
+          <div class="exp-org" style="color:var(--cyan)">MAHATMA GANDHI UNIVERSITY</div>
+          <div class="exp-role" style="color:var(--cyan)">Project Assistant</div>
+          <ul>
+            <li>Analyzed 5+ legacy workflows — 60%+ efficiency gains in pilots</li>
+            <li>Authored specs for 3 enterprise modules, 45+ API endpoints</li>
+            <li>QA across 8 modules — 35+ critical defects, bug rate below 0.1%</li>
+          </ul>
         </div>
       </div>
 
-    </div>
+      <!-- Publication -->
+      <div class="pub-card fade-in">
+        <h6>📰 SPRINGER PUBLICATION — 2025</h6>
+        <p>
+          <strong style="color:var(--text)">Study and Analysis of Automated Examination Systems in Indian Higher Educational Institutions:</strong>
+          A Comparative Approach and a Unique Model for Mahatma Gandhi University.<br><br>
+          🔗 DOI: <a href="https://doi.org/10.1007/978-981-96-8796-1_23" target="_blank">doi.org/10.1007/978-981-96-8796-1_23</a>
+        </p>
+      </div>
+    </section>
 
-    <!-- Publication -->
-    <div class="section-header s-orange fade-up mt-5"><span>📖</span> RESEARCH UNLOCKED</div>
-    <div class="pub-card fade-up">
-      <h6>📰 SPRINGER PUBLICATION — 2025</h6>
-      <p>
-        <strong style="color:var(--neon-orange)">Study and Analysis of Automated Examination Systems in Indian Higher Educational Institutions:</strong>
-        A Comparative Approach and a Unique Model for Mahatma Gandhi University.<br><br>
-        🔗 DOI: <a href="https://doi.org/10.1007/978-981-96-8796-1_23" target="_blank">doi.org/10.1007/978-981-96-8796-1_23</a>
-      </p>
-    </div>
-  </div>
-</section>
+    <div class="sec-divider"></div>
 
-<div class="pixel-divider"></div>
+    <!-- ══ REPOS ══ -->
+    <section id="repos" class="section fade-in">
+      <div class="sec-header"><span>💻</span> GITHUB INVENTORY</div>
+      <div id="repos-loading" class="repo-load">LOADING REPOSITORIES▓▓▓░░░</div>
+      <div id="repos-grid" class="repos-grid" style="display:none"></div>
+      <div style="margin-top:20px">
+        <a href="https://github.com/AromalShaji?tab=repositories" target="_blank" class="pbtn pbtn-b">◈ VIEW ALL REPOS</a>
+      </div>
+    </section>
 
-<!-- ══ REPOS ══ -->
-<section id="repos" class="section-pad">
-  <div class="container">
-    <div class="section-header s-pink fade-up"><span>💻</span> GITHUB INVENTORY</div>
-    <div id="repos-loading" class="repo-loading">LOADING REPOSITORIES... ▓▓▓░░░░░</div>
-    <div id="repos-grid" class="row g-4" style="display:none"></div>
-    <div class="text-center mt-4 fade-up">
-      <a href="https://github.com/AromalShaji?tab=repositories" target="_blank" class="pixel-btn btn-pink" style="display:inline-flex;">
-        ◈ VIEW ALL REPOS
-      </a>
-    </div>
-  </div>
-</section>
+    <div class="sec-divider"></div>
 
-<div class="pixel-divider"></div>
-
-<!-- ══ EDUCATION ══ -->
-<section id="education" class="section-pad grid-bg">
-  <div class="container">
-    <div class="section-header s-yellow fade-up"><span>🏫</span> EDUCATION TREE</div>
-    <div class="row g-4">
-      <div class="col-md-6 fade-up">
-        <div class="edu-card">
-          <div class="edu-degree">MASTER OF COMPUTER APPLICATIONS</div>
-          <div class="edu-school">Saintgits College of Engineering</div>
+    <!-- ══ EDUCATION ══ -->
+    <section id="education" class="section fade-in">
+      <div class="sec-header"><span>🏫</span> EDUCATION TREE</div>
+      <div class="edu-grid">
+        <div class="edu-card fade-in">
+          <div class="edu-deg">MASTER OF COMPUTER APPLICATIONS</div>
+          <div class="edu-sch">Saintgits College of Engineering</div>
           <div class="edu-loc">Kerala, India</div>
-          <div class="edu-year">📅 MAY 2021 — AUG 2023</div>
+          <div class="edu-yr">📅 MAY 2021 — AUG 2023</div>
         </div>
-      </div>
-      <div class="col-md-6 fade-up">
-        <div class="edu-card">
-          <div class="edu-degree">BACHELOR OF COMPUTER APPLICATIONS</div>
-          <div class="edu-school">Saintgits College of Applied Sciences</div>
+        <div class="edu-card fade-in">
+          <div class="edu-deg">BACHELOR OF COMPUTER APPLICATIONS</div>
+          <div class="edu-sch">Saintgits College of Applied Sciences</div>
           <div class="edu-loc">Kerala, India</div>
-          <div class="edu-year">📅 MAY 2018 — APR 2021</div>
+          <div class="edu-yr">📅 MAY 2018 — APR 2021</div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<div class="pixel-divider"></div>
+    <!-- ══ GAME OVER ══ -->
+    <section id="game-over">
+      <canvas id="matrix-canvas"></canvas>
+      <div class="go-inner">
+        <div class="go-title">LEVEL COMPLETE</div>
+        <div style="font-family:var(--font-pixel);font-size:.42rem;color:var(--cyan);margin-bottom:16px;letter-spacing:2px">AROMAL P SHAJI — FULL STACK DEVELOPER</div>
+        <div class="score-line">HIGH SCORE : 140,000+ RECORDS PROCESSED</div>
+        <div class="score-line">ACHIEVEMENT: 99% UPTIME UNLOCKED 🏆</div>
+        <div class="score-line">XP EARNED  : 500+ HOURS SAVED</div>
+        <div class="hero-btns" style="justify-content:center;margin-top:24px">
+          <a href="mailto:aromalpshaji10@gmail.com"       class="pbtn pbtn-a">✉ HIRE ME</a>
+          <a href="https://linkedin.com/in/aromalpshaji"  target="_blank" class="pbtn pbtn-b">▣ CONNECT</a>
+          <a href="https://github.com/AromalShaji"        target="_blank" class="pbtn pbtn-c">◈ FORK ME</a>
+        </div>
+        <div class="insert-coin">▶ INSERT COIN TO COLLABORATE ◀</div>
+        <div class="footer-copy">© 2025 AROMAL P SHAJI · KERALA, INDIA · MADE WITH ♥</div>
+      </div>
+    </section>
 
-<!-- ══ GAME OVER ══ -->
-<section id="game-over">
-  <canvas id="matrix-canvas"></canvas>
-  <div class="game-over-content">
-    <div class="game-over-title mb-3">LEVEL COMPLETE!</div>
-    <div style="font-family:'Press Start 2P';font-size:0.55rem;color:var(--neon-cyan);margin-bottom:18px;letter-spacing:2px;text-shadow:0 0 10px var(--neon-cyan)">
-      AROMAL P SHAJI — FULL STACK DEVELOPER
-    </div>
-    <div class="score-line">HIGH SCORE: 140,000+ RECORDS PROCESSED</div>
-    <div class="score-line">ACHIEVEMENT: 99% UPTIME UNLOCKED 🏆</div>
-    <div class="score-line">XP EARNED: 500+ HOURS SAVED</div>
-    <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
-      <a href="mailto:aromalpshaji10@gmail.com" class="pixel-btn btn-yellow">✉ HIRE ME</a>
-      <a href="https://linkedin.com/in/aromalpshaji" target="_blank" class="pixel-btn btn-pink">▣ CONNECT</a>
-      <a href="https://github.com/AromalShaji" target="_blank" class="pixel-btn btn-cyan">◈ FORK ME</a>
-    </div>
-    <div class="insert-coin mt-4">▶ INSERT COIN TO COLLABORATE ◀</div>
-    <div style="font-family:'Press Start 2P';font-size:0.35rem;color:rgba(0,255,255,0.25);margin-top:28px;letter-spacing:2px">
-      © 2025 AROMAL P SHAJI · KERALA, INDIA · MADE WITH 💚
-    </div>
-  </div>
-</section>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  </div><!-- end content -->
+</div><!-- end layout -->
 
 <script>
-// ─── CURSOR ───────────────────────────────────────────
-const cur = document.getElementById('cursor');
-const trail = document.getElementById('cursor-trail');
-let tx = 0, ty = 0;
+// ═══════════════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════════════
+const cur = document.getElementById('cur');
 document.addEventListener('mousemove', e => {
-  cur.style.left = (e.clientX-6)+'px';
-  cur.style.top  = (e.clientY-6)+'px';
-  setTimeout(() => {
-    trail.style.left = (e.clientX-10)+'px';
-    trail.style.top  = (e.clientY-10)+'px';
-  }, 80);
+  cur.style.left = (e.clientX - 5) + 'px';
+  cur.style.top  = (e.clientY - 5) + 'px';
 });
-document.addEventListener('mousedown', () => cur.classList.add('clicking'));
-document.addEventListener('mouseup',   () => cur.classList.remove('clicking'));
+document.addEventListener('mousedown', () => cur.classList.add('click'));
+document.addEventListener('mouseup',   () => cur.classList.remove('click'));
 
-// ─── MARQUEE ──────────────────────────────────────────
-const items = ['PHP LARAVEL','PYTHON DJANGO','REACT JS','ML OCR PIPELINE','MYSQL MONGODB','REST API DESIGN','RBAC SYSTEMS','99% UPTIME','140K RECORDS','SPRING PUBLISHED','KERAS ML','TESSERACT OCR'];
-const mt = document.getElementById('marquee-track');
-[...items,...items].forEach((t,i) => {
-  const s = document.createElement('span');
-  s.className = 'marquee-item';
-  s.textContent = '◆ ' + t;
-  mt.appendChild(s);
-});
-
-// ─── PIXEL CAR SVG ────────────────────────────────────
-function carSVG(bodyColor, glowColor, scale=1) {
-  const w = Math.round(120*scale), h = Math.round(56*scale);
-  const p = 4*scale; // pixel size
-  return `<svg width="${w}" height="${h}" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block">
-    <!-- Shadow -->
-    <rect x="8" y="48" width="104" height="4" fill="rgba(0,0,0,0.4)"/>
-    <!-- Wheels -->
-    <rect x="8"  y="36" width="24" height="16" fill="#111"/>
-    <rect x="88" y="36" width="24" height="16" fill="#111"/>
-    <rect x="12" y="38" width="16" height="12" rx="6" fill="#333"/>
-    <rect x="92" y="38" width="16" height="12" rx="6" fill="#333"/>
-    <rect x="16" y="41" width="8"  height="6"  rx="3" fill="#555"/>
-    <rect x="96" y="41" width="8"  height="6"  rx="3" fill="#555"/>
-    <!-- Hub -->
-    <rect x="18" y="43" width="4" height="2" fill="${glowColor}"/>
-    <rect x="98" y="43" width="4" height="2" fill="${glowColor}"/>
-    <!-- Body -->
-    <rect x="4"  y="24" width="112" height="20" fill="${bodyColor}"/>
-    <rect x="0"  y="28" width="120" height="12" fill="${bodyColor}"/>
-    <!-- Top/Cabin -->
-    <rect x="24" y="10" width="72" height="16" fill="${bodyColor}"/>
-    <!-- Windows -->
-    <rect x="28" y="12" width="28" height="12" fill="#001133"/>
-    <rect x="30" y="13" width="24" height="10" fill="#003366"/>
-    <rect x="64" y="12" width="28" height="12" fill="#001133"/>
-    <rect x="66" y="13" width="24" height="10" fill="#003366"/>
-    <!-- Window sheen -->
-    <rect x="30" y="13" width="6" height="4" fill="rgba(0,255,255,0.3)"/>
-    <rect x="66" y="13" width="6" height="4" fill="rgba(0,255,255,0.3)"/>
-    <!-- Stripe -->
-    <rect x="0" y="30" width="120" height="2" fill="${glowColor}" opacity="0.7"/>
-    <!-- Headlights -->
-    <rect x="108" y="28" width="8" height="6" fill="${glowColor}"/>
-    <rect x="110" y="29" width="8" height="4" fill="white" opacity="0.8"/>
-    <!-- Tail lights -->
-    <rect x="4"  y="28" width="6" height="6" fill="#ff0000"/>
-    <!-- Bumpers -->
-    <rect x="0"   y="34" width="8"  height="4" fill="#222"/>
-    <rect x="112" y="34" width="8"  height="4" fill="#222"/>
-    <!-- Underglow -->
-    <rect x="8" y="44" width="104" height="3" fill="${glowColor}" opacity="0.5"/>
-    <!-- Wheel glow -->
-    <rect x="8"  y="48" width="24" height="2" fill="${glowColor}" opacity="0.4"/>
-    <rect x="88" y="48" width="24" height="2" fill="${glowColor}" opacity="0.4"/>
-  </svg>`;
-}
-
-document.getElementById('car-main').innerHTML = carSVG('#0a2a4a','#00ffff',1);
-document.getElementById('car-bg1').innerHTML  = carSVG('#2a0a3a','#ff00ff',0.7);
-document.getElementById('car-bg2').innerHTML  = carSVG('#0a1a1a','#39ff14',0.65);
-document.getElementById('car-oncoming').innerHTML = carSVG('#3a0a00','#ff6600',0.8);
-
-// ─── PIXEL BUILDINGS ──────────────────────────────────
-const NEONS = ['#00ffff','#ff00ff','#39ff14','#ffff00','#ff6600'];
-const rnd = (a,b) => Math.floor(Math.random()*(b-a+1)+a);
-const pick = arr => arr[rnd(0,arr.length-1)];
-
-function makeBuilding(width, height, color, hasAntenna=false, density='mid') {
-  const floors = Math.floor(height/12);
-  const cols   = Math.floor(width/10);
-  let windows  = '';
-  for (let f = 0; f < floors-1; f++) {
-    for (let c = 0; c < cols; c++) {
-      const lit = Math.random() > 0.4;
-      const wc  = lit ? pick(NEONS) : '#0a0a1a';
-      const glow = lit ? `filter:drop-shadow(0 0 3px ${wc})` : '';
-      windows += `<rect x="${c*10+3}" y="${height-12-(f*12)}" width="6" height="8" fill="${wc}" style="${glow}" opacity="${lit?0.9:1}"/>`;
-    }
-  }
-  const antenna = hasAntenna ? `
-    <rect x="${width/2-1}" y="${-20}" width="2" height="20" fill="${color}" opacity="0.8"/>
-    <rect x="${width/2-4}" y="${-22}" width="8" height="3" fill="${color}" opacity="0.6"/>
-    <rect x="${width/2-1}" y="${-26}" width="2" height="5" fill="${pick(NEONS)}" style="filter:drop-shadow(0 0 4px ${pick(NEONS)})"/>
-  ` : '';
-  const base = `
-    <rect x="0" y="0" width="${width}" height="${height}" fill="#0a0a18"/>
-    <rect x="0" y="0" width="${width}" height="4" fill="${color}" opacity="0.7"/>
-    <rect x="0" y="${height-4}" width="${width}" height="4" fill="${color}" opacity="0.4"/>
-    ${windows}${antenna}
-  `;
-  return `<svg width="${width}" height="${height+30}" viewBox="0 ${-30} ${width} ${height+30}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:bottom;image-rendering:pixelated;overflow:visible">${base}</svg>`;
-}
-
-function populateCity(id, count, minW, maxW, minH, maxH, layer) {
-  const el = document.getElementById(id);
-  let content = '';
-  for (let i = 0; i < count; i++) {
-    const w = rnd(minW, maxW);
-    const h = rnd(minH, maxH);
-    const c = pick(NEONS);
-    const ant = Math.random() > 0.6;
-    content += makeBuilding(w, h, c, ant, layer);
-  }
-  // Duplicate for seamless scroll
-  el.innerHTML = content + content;
-}
-
-populateCity('city-far',  20, 30, 60, 80, 150, 'far');
-populateCity('city-mid',  18, 40, 80, 100, 180, 'mid');
-populateCity('city-near', 14, 60, 100, 120, 200, 'near');
-
-// ─── LAMPPOSTS ────────────────────────────────────────
-(function() {
-  const container = document.getElementById('lampposts');
+// Click sparks
+document.addEventListener('click', e => {
+  const cols = ['#e8a020','#5ab4c8','#4caf70','#c060a0'];
   for (let i = 0; i < 8; i++) {
-    const lp = document.createElement('div');
-    lp.style.cssText = `
-      position:absolute; bottom:140px; left:${i*220+100}px; z-index:6;
-      animation:lamp-scroll-${i%3} 8s linear ${(i*0.5)}s infinite;
-      pointer-events:none; display:inline-block;
-    `;
-    lp.innerHTML = `<svg width="16" height="80" viewBox="0 0 16 80" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
-      <rect x="6" y="20" width="4" height="60" fill="#333"/>
-      <rect x="4" y="16" width="8" height="6" fill="#444"/>
-      <rect x="0" y="10" width="16" height="8" fill="#555"/>
-      <rect x="2" y="8"  width="12" height="4" fill="#ffff88"/>
-      <rect x="0" y="10" width="16" height="4" fill="#ffff00" opacity="0.4"/>
-    </svg>`;
-    container.appendChild(lp);
+    const sp = document.createElement('div');
+    const angle = (i / 8) * Math.PI * 2;
+    const dist  = 30 + Math.random() * 30;
+    const col   = cols[i % cols.length];
+    sp.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:4px;height:4px;background:${col};pointer-events:none;z-index:99999;
+      transition:all .45s ease-out;image-rendering:pixelated;`;
+    document.body.appendChild(sp);
+    requestAnimationFrame(() => {
+      sp.style.left    = (e.clientX + Math.cos(angle)*dist) + 'px';
+      sp.style.top     = (e.clientY + Math.sin(angle)*dist) + 'px';
+      sp.style.opacity = '0';
+    });
+    setTimeout(() => sp.remove(), 480);
   }
-})();
+});
 
-// Style lamppost scroll animations
-const lampStyle = document.createElement('style');
-lampStyle.textContent = `
-@keyframes lamp-scroll-0 { from{transform:translateX(0)} to{transform:translateX(-200vw)} }
-@keyframes lamp-scroll-1 { from{transform:translateX(0)} to{transform:translateX(-200vw)} }
-@keyframes lamp-scroll-2 { from{transform:translateX(0)} to{transform:translateX(-200vw)} }
-`;
-lampStyle.textContent += [...Array(8)].map((_,i)=>`
-  #lampposts > div:nth-child(${i+1}) { animation-name: lamp-scroll-${i%3}; }
-`).join('');
-document.head.appendChild(lampStyle);
+// ═══════════════════════════════════════════════════
+// MARQUEE
+// ═══════════════════════════════════════════════════
+const items = ['PHP LARAVEL','PYTHON DJANGO','REACT JS','ML OCR PIPELINE',
+  'MYSQL MONGODB','REST API DESIGN','RBAC SYSTEMS','99% UPTIME',
+  '140K RECORDS','SPRINGER PUBLISHED','TESSERACT OCR','SYSTEM ARCHITECT'];
+const mq = document.getElementById('mq-track');
+[...items, ...items].forEach(t => {
+  const s = document.createElement('span');
+  s.className = 'mq-item';
+  s.textContent = '◆ ' + t;
+  mq.appendChild(s);
+});
 
-// ─── STAR FIELD ───────────────────────────────────────
-(function() {
-  const canvas = document.getElementById('star-field');
-  const ctx = canvas.getContext('2d');
-  let stars = [], W, H;
+// ═══════════════════════════════════════════════════
+// STAR FIELD
+// ═══════════════════════════════════════════════════
+(function () {
+  const c = document.getElementById('star-canvas');
+  const ctx = c.getContext('2d');
+  let stars, W, H;
+  const COLS = ['#5ab4c8','#e8a020','#c8cce0','#4caf70','#c060a0'];
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  function init() {
-    stars = [];
-    for (let i = 0; i < 180; i++) {
-      stars.push({
-        x: Math.random()*W, y: Math.random()*H*0.65,
-        r: Math.random()*1.5+0.3,
-        spd: Math.random()*0.08+0.02,
-        col: pick(['#00ffff','#ff00ff','#ffff00','#ffffff','#aaaaff']),
-        phase: Math.random()*Math.PI*2
-      });
-    }
+    W = c.width = c.offsetWidth; H = c.height = c.offsetHeight;
+    stars = Array.from({length:160}, () => ({
+      x: Math.random()*W, y: Math.random()*H*.65,
+      r: Math.random()*1.2 + .3,
+      spd: Math.random()*.04 + .01,
+      col: COLS[Math.floor(Math.random()*COLS.length)],
+      phase: Math.random()*Math.PI*2
+    }));
   }
   function draw(t) {
     ctx.clearRect(0,0,W,H);
     stars.forEach(s => {
-      const alpha = 0.4 + 0.6*Math.abs(Math.sin(t*.001+s.phase));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
       ctx.fillStyle = s.col;
-      ctx.globalAlpha = alpha;
+      ctx.globalAlpha = .3 + .5 * Math.abs(Math.sin(t*.0008 + s.phase));
       ctx.fill();
-      s.x -= s.spd;
-      if (s.x < 0) { s.x = W; s.y = Math.random()*H*0.65; }
+      s.x -= s.spd; if (s.x < 0) { s.x = W; s.y = Math.random()*H*.65; }
     });
     ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize', () => { resize(); init(); });
-  resize(); init(); draw(0);
+  window.addEventListener('resize', () => { resize(); });
+  resize(); draw(0);
 })();
 
-// ─── MATRIX CANVAS ────────────────────────────────────
-(function() {
+// ═══════════════════════════════════════════════════
+// CITY SILHOUETTE (canvas, painted once)
+// ═══════════════════════════════════════════════════
+(function () {
+  const c  = document.getElementById('city-canvas');
+  const ctx = c.getContext('2d');
+  function paint() {
+    c.width  = c.offsetWidth;
+    c.height = c.offsetHeight;
+    const W = c.width, H = c.height;
+    const NEONS = ['#5ab4c8','#e8a020','#4caf70','#c060a0'];
+    const rnd = (a,b) => Math.floor(Math.random()*(b-a+1)+a);
+    // buildings
+    for (let x = 0; x < W; x += rnd(18,40)) {
+      const bh = rnd(40,130);
+      const bw = rnd(16,36);
+      ctx.fillStyle = '#0c0e18';
+      ctx.fillRect(x, H-bh, bw, bh);
+      // windows
+      for (let wy = H-bh+4; wy < H-4; wy += 14) {
+        for (let wx = x+4; wx < x+bw-4; wx += 10) {
+          if (Math.random() > .45) {
+            ctx.fillStyle = NEONS[Math.floor(Math.random()*NEONS.length)];
+            ctx.globalAlpha = Math.random()*.18 + .04;
+            ctx.fillRect(wx, wy, 5, 8);
+          }
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  window.addEventListener('resize', paint);
+  paint();
+})();
+
+// ═══════════════════════════════════════════════════
+// ROAD RAIL — SVG backbone + top-view cars
+// ═══════════════════════════════════════════════════
+(function () {
+  const rail    = document.getElementById('road-rail');
+  const svg     = document.getElementById('road-svg');
+  const RW      = 44; // road width (px) — matches CSS var
+  const CX      = RW / 2; // center of rail
+  const R       = RW / 2; // corner radius
+  const SECTIONS = ['hero','about','skills','experience','repos','education','game-over'];
+
+  function buildRoad() {
+    // Road stays on the LEFT side of the viewport.
+    // At each section boundary it curves OVER the top of the section
+    // (a U-turn in the right) then comes back down.
+    // We implement: go DOWN left side, at a section boundary
+    // draw a semicircle that goes RIGHT then LEFT, then continue down.
+    // The "curve" is drawn right across the top of the next section,
+    // but since this is a fixed sidebar, we keep it within the rail
+    // and just show the U-turn decoratively.
+
+    const totalH = document.body.scrollHeight;
+    svg.setAttribute('height', totalH);
+    svg.setAttribute('width', RW);
+
+    // Gather section boundary Y positions relative to document
+    const sections = SECTIONS.map(id => {
+      const el = document.getElementById(id);
+      return el ? el.offsetTop : null;
+    }).filter(Boolean);
+
+    let path = `M ${CX} 0 `;
+    let prev = 0;
+
+    sections.forEach((secY, i) => {
+      if (i === 0) { path += `L ${CX} ${secY} `; prev = secY; return; }
+      // Straight down to section boundary
+      path += `L ${CX} ${secY} `;
+      prev = secY;
+    });
+    path += `L ${CX} ${totalH}`;
+
+    // Road body (wide stroke)
+    const roadPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+    roadPath.setAttribute('d', path);
+    roadPath.setAttribute('fill', 'none');
+    roadPath.setAttribute('stroke', '#131824');
+    roadPath.setAttribute('stroke-width', RW);
+
+    // Centre dashes
+    const dashPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+    dashPath.setAttribute('d', path);
+    dashPath.setAttribute('fill', 'none');
+    dashPath.setAttribute('stroke', '#2a3050');
+    dashPath.setAttribute('stroke-width', '1.5');
+    dashPath.setAttribute('stroke-dasharray', '10 12');
+
+    // Edge lines
+    const edgeL = document.createElementNS('http://www.w3.org/2000/svg','line');
+    edgeL.setAttribute('x1','0'); edgeL.setAttribute('x2','0');
+    edgeL.setAttribute('y1','0'); edgeL.setAttribute('y2', totalH);
+    edgeL.setAttribute('stroke','#1e2438'); edgeL.setAttribute('stroke-width','1.5');
+
+    const edgeR = document.createElementNS('http://www.w3.org/2000/svg','line');
+    edgeR.setAttribute('x1', RW); edgeR.setAttribute('x2', RW);
+    edgeR.setAttribute('y1','0'); edgeR.setAttribute('y2', totalH);
+    edgeR.setAttribute('stroke','#1e2438'); edgeR.setAttribute('stroke-width','1.5');
+
+    // Section boundary curves — draw a small horizontal bar + dots
+    sections.slice(1).forEach(secY => {
+      // Horizontal rule across the road at boundary
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+
+      // Arrow chevron
+      const chev = document.createElementNS('http://www.w3.org/2000/svg','path');
+      chev.setAttribute('d', `M ${CX-8} ${secY-10} L ${CX} ${secY-2} L ${CX+8} ${secY-10}`);
+      chev.setAttribute('fill','none');
+      chev.setAttribute('stroke','#2a3050');
+      chev.setAttribute('stroke-width','2');
+      chev.setAttribute('stroke-linecap','round');
+
+      // Crosswalk dots
+      for (let x = 3; x < RW - 3; x += 6) {
+        const dot = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        dot.setAttribute('x', x); dot.setAttribute('y', secY - 1);
+        dot.setAttribute('width','4'); dot.setAttribute('height','2');
+        dot.setAttribute('fill','#1e2438');
+        g.appendChild(dot);
+      }
+      g.appendChild(chev);
+      svg.appendChild(g);
+    });
+
+    svg.insertBefore(roadPath, svg.firstChild);
+    svg.appendChild(edgeL);
+    svg.appendChild(edgeR);
+    svg.appendChild(dashPath);
+
+    // Rebuild cars
+    rail.querySelectorAll('.road-car').forEach(e => e.remove());
+    makeCars(totalH);
+  }
+
+  // ── Top-view pixel cars ──
+  // Each car is a small canvas drawn as pixel art from above
+  function drawTopViewCar(ctx, color, glowColor, W, H) {
+    ctx.clearRect(0,0,W,H);
+    const c  = color;
+    const g  = glowColor;
+    const s  = 1;
+
+    // Body
+    ctx.fillStyle = c;
+    ctx.fillRect(4*s, 2*s, 8*s, 16*s);   // main body
+
+    // Roof (darker)
+    ctx.fillStyle = shadeColor(c, -40);
+    ctx.fillRect(5*s, 5*s, 6*s, 10*s);
+
+    // Windshields
+    ctx.fillStyle = '#1a2840';
+    ctx.fillRect(5*s, 3*s, 6*s, 4*s);    // front
+    ctx.fillRect(5*s, 13*s, 6*s, 4*s);   // rear
+
+    // Wheels
+    ctx.fillStyle = '#0a0c14';
+    ctx.fillRect(1*s, 3*s,  3*s, 4*s);
+    ctx.fillRect(12*s,3*s,  3*s, 4*s);
+    ctx.fillRect(1*s, 13*s, 3*s, 4*s);
+    ctx.fillRect(12*s,13*s, 3*s, 4*s);
+
+    // Headlights
+    ctx.fillStyle = g;
+    ctx.fillRect(5*s, 2*s,  2*s, 2*s);
+    ctx.fillRect(9*s, 2*s,  2*s, 2*s);
+
+    // Tail lights
+    ctx.fillStyle = '#cc2222';
+    ctx.fillRect(5*s, 16*s, 2*s, 2*s);
+    ctx.fillRect(9*s, 16*s, 2*s, 2*s);
+  }
+
+  function shadeColor(hex, pct) {
+    // lighten/darken hex by pct
+    let r = parseInt(hex.slice(1,3),16);
+    let g = parseInt(hex.slice(3,5),16);
+    let b = parseInt(hex.slice(5,7),16);
+    r = Math.max(0,Math.min(255,r+pct));
+    g = Math.max(0,Math.min(255,g+pct));
+    b = Math.max(0,Math.min(255,b+pct));
+    return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+
+  const CAR_DEFS = [
+    { color:'#1a3a5a', glow:'#5ab4c8', spd:0.22, y:-80,  dir:1  },
+    { color:'#2a1a3a', glow:'#c060a0', spd:0.15, y:-300, dir:1  },
+    { color:'#1a3a1a', glow:'#4caf70', spd:0.18, y:-500, dir:1  },
+    { color:'#3a2a10', glow:'#e8a020', spd:0.13, y:200,  dir:-1 },
+    { color:'#1a2a1a', glow:'#4caf70', spd:0.20, y:600,  dir:-1 },
+  ];
+
+  function makeCars(totalH) {
+    CAR_DEFS.forEach(def => {
+      const W = 16, H = 20;
+      const cvs = document.createElement('canvas');
+      cvs.width = W; cvs.height = H;
+      cvs.style.cssText = `width:${W}px;height:${H}px;image-rendering:pixelated;`;
+      drawTopViewCar(cvs.getContext('2d'), def.color, def.glow, W, H);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'road-car';
+      wrap.style.cssText = `position:absolute;left:${(44-W)/2}px;
+        transform: rotate(${def.dir === 1 ? '0' : '180'}deg);pointer-events:none;`;
+      wrap.appendChild(cvs);
+      rail.appendChild(wrap);
+
+      def.el  = wrap;
+      def.pos = def.y;
+      def.max = totalH;
+    });
+  }
+
+  function animCars() {
+    const H = document.body.scrollHeight;
+    CAR_DEFS.forEach(def => {
+      if (!def.el) return;
+      def.pos += def.spd * def.dir * 16;
+      if (def.dir === 1  && def.pos > H + 40)  def.pos = -40;
+      if (def.dir === -1 && def.pos < -40)      def.pos = H + 40;
+      def.el.style.top = def.pos + 'px';
+    });
+    requestAnimationFrame(animCars);
+  }
+
+  // Build initially, rebuild on resize
+  buildRoad();
+  animCars();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // Clear SVG children
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      buildRoad();
+    }, 200);
+  });
+})();
+
+// ═══════════════════════════════════════════════════
+// MATRIX CANVAS
+// ═══════════════════════════════════════════════════
+(function(){
   const mc = document.getElementById('matrix-canvas');
   const cx = mc.getContext('2d');
-  let drops = [], mW, mH;
-  const chars = '01アイウエオ</>{}[]PHP';
+  let drops = [], mW, mH, running = false;
+  const chars = '01アイウPHP</>{}[]';
   function resize() {
     mW = mc.width  = mc.offsetWidth;
     mH = mc.height = mc.offsetHeight;
     drops = Array(Math.floor(mW/14)).fill(0).map(()=>Math.random()*mH/18);
   }
   function draw() {
-    cx.fillStyle='rgba(5,5,16,0.06)';
+    if(!running) return;
+    cx.fillStyle = 'rgba(10,12,18,0.06)';
     cx.fillRect(0,0,mW,mH);
-    cx.fillStyle='#00ff41';
-    cx.font='12px VT323,monospace';
-    drops.forEach((y,i)=>{
-      cx.fillText(chars[Math.floor(Math.random()*chars.length)],i*14,y*18);
-      if(y*18>mH&&Math.random()>.975) drops[i]=0;
+    cx.fillStyle = '#2a6040';
+    cx.font = '11px Share Tech Mono,monospace';
+    drops.forEach((y,i) => {
+      cx.fillText(chars[Math.floor(Math.random()*chars.length)], i*14, y*18);
+      if(y*18 > mH && Math.random() > .975) drops[i] = 0;
       drops[i]++;
     });
     requestAnimationFrame(draw);
   }
-  const obs = new IntersectionObserver(e=>{
-    if(e[0].isIntersecting){ resize(); draw(); obs.disconnect(); }
+  const obs = new IntersectionObserver(e => {
+    if(e[0].isIntersecting && !running){ running=true; resize(); draw(); }
   });
   obs.observe(document.getElementById('game-over'));
 })();
 
-// ─── SCROLL ANIMATIONS ────────────────────────────────
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('visible'), (e.target.dataset.delay||0));
+// ═══════════════════════════════════════════════════
+// SCROLL FADE-IN
+// ═══════════════════════════════════════════════════
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('vis'), i * 60);
     }
   });
-},{threshold:0.1});
-document.querySelectorAll('.fade-up,.exp-item').forEach((el,i)=>{
-  el.dataset.delay = (i%6)*80;
-  observer.observe(el);
-});
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
 
-// ─── COUNTER ──────────────────────────────────────────
-const cobs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const el = e.target.querySelector('[data-target]');
-      if(!el) return;
-      const target = +el.dataset.target;
-      let count = 0, step = target/60;
-      const iv = setInterval(()=>{
-        count = Math.min(count+step,target);
-        el.textContent = Math.floor(count);
-        if(count>=target) clearInterval(iv);
-      },16);
-      cobs.unobserve(e.target);
-    }
+// ═══════════════════════════════════════════════════
+// COUNTER ANIMATION
+// ═══════════════════════════════════════════════════
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    e.target.querySelectorAll('[data-count]').forEach(el => {
+      const target = +el.dataset.count;
+      let n = 0;
+      const step = target / 50;
+      const iv = setInterval(() => {
+        n = Math.min(n + step, target);
+        el.textContent = Math.floor(n);
+        if(n >= target) clearInterval(iv);
+      }, 18);
+    });
+    countObs.unobserve(e.target);
   });
-},{threshold:0.5});
-document.querySelectorAll('.stat-box').forEach(el=>cobs.observe(el));
+}, { threshold: .5 });
+document.querySelectorAll('.about-grid').forEach(el => countObs.observe(el));
 
-// ─── GITHUB REPOS ─────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// ACTIVE NAV
+// ═══════════════════════════════════════════════════
+const sections = ['hero','about','skills','experience','repos','education','game-over'];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if(el && window.scrollY >= el.offsetTop - 120) cur = id;
+  });
+  document.querySelectorAll('.nav-a').forEach(a => {
+    const href = a.getAttribute('href').slice(1);
+    a.classList.toggle('active', href === cur);
+  });
+}, { passive: true });
+
+// ═══════════════════════════════════════════════════
+// GITHUB REPOS
+// ═══════════════════════════════════════════════════
 const LANG_COLORS = {
-  PHP:'#ff00ff', Python:'#39ff14', JavaScript:'#ffff00',
-  HTML:'#ff6600', CSS:'#00ffff', TypeScript:'#00aaff',
-  Shell:'#ff9900'
+  PHP:'#e8a020', Python:'#4caf70', JavaScript:'#c8a020',
+  HTML:'#c06040', CSS:'#5ab4c8', TypeScript:'#4080c0'
 };
 async function loadRepos() {
   try {
-    const r = await fetch('https://api.github.com/users/AromalShaji/repos?sort=updated&per_page=12&type=public');
+    const r = await fetch('https://api.github.com/users/AromalShaji/repos?sort=updated&per_page=9&type=public');
     const repos = await r.json();
+    document.getElementById('repos-loading').style.display = 'none';
+    if(!Array.isArray(repos) || !repos.length) return;
     const grid = document.getElementById('repos-grid');
-    document.getElementById('repos-loading').style.display='none';
-    if(!Array.isArray(repos)||!repos.length) return;
-    grid.style.display='flex';
-    repos.slice(0,9).forEach((repo,i)=>{
-      const lang  = repo.language||'N/A';
-      const color = LANG_COLORS[lang]||'#aaaaaa';
-      const col   = document.createElement('div');
-      col.className = 'col-md-4 col-sm-6 fade-up';
-      col.innerHTML = `
-        <a href="${repo.html_url}" target="_blank" class="repo-card" style="border-color:${color}60">
-          <div class="repo-corner" style="border-color:transparent ${color} transparent transparent"></div>
-          <div class="repo-name" style="color:${color}">${repo.name}</div>
-          <div class="repo-desc">${repo.description||'No description provided.'}</div>
-          <div class="d-flex align-items-center flex-wrap gap-2">
-            <span class="repo-lang" style="border-color:${color};color:${color}">◉ ${lang}</span>
-            <span class="repo-stars">★ ${repo.stargazers_count}</span>
-            <span style="font-family:'Press Start 2P';font-size:.35rem;color:var(--neon-cyan)">🍴 ${repo.forks_count}</span>
-          </div>
-        </a>`;
-      grid.appendChild(col);
-      setTimeout(()=>observer.observe(col.querySelector('.fade-up')||col),10);
+    grid.style.display = 'grid';
+    repos.slice(0,9).forEach(repo => {
+      const lang  = repo.language || 'N/A';
+      const color = LANG_COLORS[lang] || '#6870a0';
+      const card  = document.createElement('a');
+      card.href   = repo.html_url;
+      card.target = '_blank';
+      card.className = 'repo-card fade-in';
+      card.innerHTML = `
+        <div class="repo-name">${repo.name}</div>
+        <div class="repo-desc">${repo.description || 'No description.'}</div>
+        <div class="repo-meta">
+          <span class="repo-lang" style="border-color:${color}40;color:${color}">◉ ${lang}</span>
+          <span class="repo-stars">★ ${repo.stargazers_count}</span>
+          <span style="font-family:var(--font-pixel);font-size:.28rem;color:var(--text-dim)">🍴${repo.forks_count}</span>
+        </div>`;
+      grid.appendChild(card);
+      setTimeout(() => fadeObs.observe(card), 10);
     });
   } catch(e) {
     document.getElementById('repos-loading').textContent = '> GITHUB API RATE LIMITED. VISIT PROFILE DIRECTLY.';
   }
 }
 loadRepos();
-
-// ─── CLICK SPARKS ─────────────────────────────────────
-document.addEventListener('click', e=>{
-  const cols = ['#00ffff','#ff00ff','#39ff14','#ffff00','#ff6600'];
-  for(let i=0;i<10;i++){
-    const sp = document.createElement('div');
-    const angle = (i/10)*Math.PI*2;
-    const dist  = 40+Math.random()*40;
-    const col   = cols[Math.floor(Math.random()*cols.length)];
-    sp.style.cssText=`
-      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
-      width:5px;height:5px;background:${col};
-      pointer-events:none;z-index:99999;
-      transition:all .5s ease-out;
-      box-shadow:0 0 6px ${col};
-      image-rendering:pixelated;
-    `;
-    document.body.appendChild(sp);
-    requestAnimationFrame(()=>{
-      sp.style.left=(e.clientX+Math.cos(angle)*dist)+'px';
-      sp.style.top =(e.clientY+Math.sin(angle)*dist)+'px';
-      sp.style.opacity='0';
-      sp.style.width='2px';sp.style.height='2px';
-    });
-    setTimeout(()=>sp.remove(),520);
-  }
-});
-
-// ─── ACTIVE NAV ───────────────────────────────────────
-window.addEventListener('scroll',()=>{
-  const secs=['hero','about','skills','experience','repos','education','game-over'];
-  let cur='';
-  secs.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&window.scrollY>=el.offsetTop-120) cur=id;
-  });
-  document.querySelectorAll('.nav-link-pixel').forEach(a=>{
-    a.style.color='';a.style.textShadow='';a.style.borderColor='transparent';
-    const href=a.getAttribute('href').replace('#','');
-    if(href===cur||('about'===cur&&href==='about')){
-      a.style.color='var(--neon-yellow)';
-      a.style.textShadow='0 0 10px var(--neon-yellow)';
-      a.style.borderColor='rgba(255,255,0,0.4)';
-    }
-  });
-});
-
-// ─── PARALLAX BUILDINGS ON MOUSE ──────────────────────
-document.addEventListener('mousemove', e=>{
-  const mx=(e.clientX/window.innerWidth-.5);
-  const far = document.getElementById('city-far');
-  const mid = document.getElementById('city-mid');
-  if(far) far.style.marginLeft = (mx*-6)+'px';
-  if(mid) mid.style.marginLeft = (mx*-12)+'px';
-});
 </script>
 </body>
 </html>
